@@ -1,0 +1,46 @@
+# Archivos a ignorar en Google Cloud deployments
+
+.git
+.gitignore
+.gcloudignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+tests/
+test_*.py
+*_test.py
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Scripts locales
+setup-gcp.sh
+
