@@ -27,6 +27,8 @@
 ## 🚀 Cómo levantar la PoC
 
 ### Configuración inicial
+
+#### 1. Variables de entorno
 ```bash
 # Copiar variables de entorno
 cp .env.example .env
@@ -34,6 +36,33 @@ cp .env.example .env
 # Editar con tus valores reales
 nano .env
 ```
+
+#### 2. Credenciales de Service Account (Recomendado)
+
+**⚠️ IMPORTANTE: NUNCA commitees archivos de credenciales al repositorio**
+
+1. Descargar el archivo JSON de credenciales desde Google Cloud Console:
+   - Ir a IAM & Admin > Service Accounts
+   - Crear o seleccionar una service account
+   - Generar una nueva clave JSON
+
+2. Guardar el archivo como `key.json` en la raíz del proyecto (o en una ubicación segura fuera del repo)
+
+3. Configurar la variable de entorno (recomendado):
+   ```bash
+   # En .env
+   CREDENTIALS_PATH=/ruta/segura/a/tu/key.json
+   
+   # O usar la variable estándar de Google
+   export GOOGLE_APPLICATION_CREDENTIALS=/ruta/segura/a/tu/key.json
+   ```
+
+4. Alternativamente, copiar el archivo a `key.json` en la raíz del proyecto:
+   ```bash
+   cp /ruta/a/tu/credenciales.json key.json
+   ```
+
+**Nota**: El archivo `key.json` está en `.gitignore` y NO será commiteado al repositorio.
 
 ### Desarrollo local
 ```bash

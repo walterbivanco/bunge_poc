@@ -45,7 +45,10 @@ PROJECT_ID=$PROJECT_ID
 BQ_DATASET=demo
 BQ_TABLE=ventas
 VERTEX_LOCATION=us-central1
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-2.0-flash-exp
+
+# Credenciales (opcional - si no se define, usa GOOGLE_APPLICATION_CREDENTIALS o key.json)
+# CREDENTIALS_PATH=/ruta/a/tu/key.json
 EOF
 
 echo "✅ Archivo .env creado"
