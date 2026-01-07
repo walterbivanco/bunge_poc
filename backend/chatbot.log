@@ -514,3 +514,204 @@ Exception: Error al generar SQL con Gemini: 'HARM_CATEGORY_DANGEROUS_CONTENT' is
 2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - ✅ Success
 2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - ================================================================================
 2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [3900dc65] completado exitosamente en 72.04s
+2026-01-07 11:37:31,066 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:37:31,067 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:37:31,067 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:37:49,899 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [8064dd02]: Contratos de SOJA en 2025
+2026-01-07 11:37:49,900 - nl2sql_chatbot - INFO - ℹ️  [8064dd02] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:37:49,900 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery (sin caché)...
+2026-01-07 11:37:51,328 - nl2sql_chatbot - INFO - ℹ️  Schema cargado y cacheado en 1.43s (24 columnas)
+2026-01-07 11:37:51,328 - nl2sql_chatbot - INFO - ℹ️  [8064dd02] Schema obtenido (1.43s)
+2026-01-07 11:37:51,328 - nl2sql_chatbot - INFO - ℹ️  [8064dd02] Paso 2: Construyendo prompt
+2026-01-07 11:37:51,329 - nl2sql_chatbot - INFO - ℹ️  [8064dd02] Prompt construido (0.000s, 891 chars)
+2026-01-07 11:37:51,329 - nl2sql_chatbot - INFO - ℹ️  [8064dd02] Paso 3: Generando SQL con Gemini
+2026-01-07 11:37:51,329 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-07 11:37:51,329 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-07 11:38:18,880 - nl2sql_chatbot - INFO - ℹ️  ⚡ Respuesta recibida de Gemini en 27.55s
+2026-01-07 11:38:18,883 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 315, 'candidates_tokens': 68, 'total_tokens': 383}
+2026-01-07 11:38:18,883 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 27.55s
+2026-01-07 11:38:18,883 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` WHERE PRODUCTO = 'SOJA' AND EXTRACT(YEAR FROM FE...
+2026-01-07 11:38:18,884 - nl2sql_chatbot - INFO - ℹ️  [8064dd02] Paso 4: Ejecutando SQL en BigQuery
+2026-01-07 11:38:18,884 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Inicio execute_query
+2026-01-07 11:38:19,389 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Cliente obtenido en 0.505s
+2026-01-07 11:38:19,389 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-07 11:38:19,389 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` WHERE PRODUCTO = 'SOJA' AND EXTRACT(YEAR FROM FE...
+2026-01-07 11:38:19,389 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Enviando query a BigQuery...
+2026-01-07 11:38:21,014 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Query enviada, esperando resultados...
+2026-01-07 11:38:21,482 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Resultados recibidos en 2.093s
+2026-01-07 11:38:21,493 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 2.61s
+2026-01-07 11:38:21,493 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 100
+2026-01-07 11:38:21,493 - nl2sql_chatbot - INFO - ℹ️  [8064dd02] BigQuery completado (2.61s)
+2026-01-07 11:38:21,493 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 8064dd02
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - ❓ Question: Contratos de SOJA en 2025
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - ⏱️  Total Time: 31.59s
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO -   - Get Schema: 1.43s
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 27.55s
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 2.61s
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` WHERE PRODUCTO = 'SOJA' AND EXTRACT(YEAR FROM FECHACONCERTACION) = 2025 LIMIT 100
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - 📊 Rows: 100
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 315, 'candidates_tokens': 68, 'total_tokens': 383}
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:38:21,494 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [8064dd02] completado exitosamente en 31.59s
+2026-01-07 11:41:22,564 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:41:22,564 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:41:22,565 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:41:39,797 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [e595379e]: Muéstrame los últimos 10 contratos
+2026-01-07 11:41:39,797 - nl2sql_chatbot - INFO - ℹ️  [e595379e] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:41:39,798 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery (sin caché)...
+2026-01-07 11:41:41,639 - nl2sql_chatbot - INFO - ℹ️  Schema cargado y cacheado en 1.84s (24 columnas)
+2026-01-07 11:41:41,639 - nl2sql_chatbot - INFO - ℹ️  [e595379e] Schema obtenido (1.84s)
+2026-01-07 11:41:41,640 - nl2sql_chatbot - INFO - ℹ️  [e595379e] Paso 2: Construyendo prompt
+2026-01-07 11:41:41,640 - nl2sql_chatbot - INFO - ℹ️  [e595379e] Prompt construido (0.000s, 900 chars)
+2026-01-07 11:41:41,640 - nl2sql_chatbot - INFO - ℹ️  [e595379e] Paso 3: Generando SQL con Gemini
+2026-01-07 11:41:41,640 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-1.5-flash-002
+2026-01-07 11:41:41,641 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-07 11:41:43,687 - nl2sql_chatbot - ERROR - ❌ Error generando SQL después de 2.05s: 404 Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 75, in error_remapped_callable
+    return callable_(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 1166, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 996, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.NOT_FOUND
+	details = "Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions"
+	debug_error_string = "UNKNOWN:Error received from peer ipv4:142.251.129.106:443 {grpc_status:5, grpc_message:"Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions"}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 74, in nl_to_sql
+    response = model.generate_content(prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 654, in generate_content
+    return self._generate_content(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 779, in _generate_content
+    gapic_response = self._prediction_client.generate_content(request=request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/cloud/aiplatform_v1/services/prediction_service/client.py", line 2159, in generate_content
+    response = rpc(
+               ^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/gapic_v1/method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.NotFound: 404 Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+2026-01-07 11:41:43,696 - nl2sql_chatbot - ERROR - ❌ [e595379e] Error procesando pregunta: Error al generar SQL con Gemini: 404 Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 75, in error_remapped_callable
+    return callable_(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 1166, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 996, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.NOT_FOUND
+	details = "Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions"
+	debug_error_string = "UNKNOWN:Error received from peer ipv4:142.251.129.106:443 {grpc_status:5, grpc_message:"Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions"}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 74, in nl_to_sql
+    response = model.generate_content(prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 654, in generate_content
+    return self._generate_content(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 779, in _generate_content
+    gapic_response = self._prediction_client.generate_content(request=request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/cloud/aiplatform_v1/services/prediction_service/client.py", line 2159, in generate_content
+    response = rpc(
+               ^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/gapic_v1/method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.NotFound: 404 Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/main.py", line 129, in ask_question
+    llm_result = nl_to_sql(prompt)
+                 ^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 136, in nl_to_sql
+    raise Exception(f"Error al generar SQL con Gemini: {str(e)}")
+Exception: Error al generar SQL con Gemini: 404 Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+2026-01-07 11:41:43,700 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:41:43,700 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: e595379e
+2026-01-07 11:41:43,700 - nl2sql_chatbot - INFO - ❓ Question: Muéstrame los últimos 10 contratos
+2026-01-07 11:41:43,700 - nl2sql_chatbot - INFO - ⏱️  Total Time: 3.90s
+2026-01-07 11:41:43,700 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:41:43,700 - nl2sql_chatbot - INFO -   - Get Schema: 1.84s
+2026-01-07 11:41:43,700 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-07 11:41:43,700 - nl2sql_chatbot - ERROR - ❌ Error: Error al generar SQL con Gemini: 404 Publisher Model `projects/bunge-de-poc-insumos/locations/us-central1/publishers/google/models/gemini-1.5-flash-002` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+2026-01-07 11:41:43,700 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:43:28,653 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:43:28,653 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:43:28,653 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:43:48,263 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [a89b2a78]: ¿Cuántos contratos hay por estado?
+2026-01-07 11:43:48,263 - nl2sql_chatbot - INFO - ℹ️  [a89b2a78] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:43:48,263 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery (sin caché)...
+2026-01-07 11:43:49,924 - nl2sql_chatbot - INFO - ℹ️  Schema cargado y cacheado en 1.66s (24 columnas)
+2026-01-07 11:43:49,924 - nl2sql_chatbot - INFO - ℹ️  [a89b2a78] Schema obtenido (1.66s)
+2026-01-07 11:43:49,924 - nl2sql_chatbot - INFO - ℹ️  [a89b2a78] Paso 2: Construyendo prompt
+2026-01-07 11:43:49,924 - nl2sql_chatbot - INFO - ℹ️  [a89b2a78] Prompt construido (0.000s, 900 chars)
+2026-01-07 11:43:49,924 - nl2sql_chatbot - INFO - ℹ️  [a89b2a78] Paso 3: Generando SQL con Gemini
+2026-01-07 11:43:49,924 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-07 11:43:49,925 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-07 11:43:53,096 - nl2sql_chatbot - WARNING - ⚠️  ⚠️  Error 429 (Rate Limit) - Esperando 2s antes de reintentar...
+2026-01-07 11:43:55,097 - nl2sql_chatbot - WARNING - ⚠️  Reintento 1/3 - Llamando a Gemini...
+2026-01-07 11:43:56,470 - nl2sql_chatbot - WARNING - ⚠️  ⚠️  Error 429 (Rate Limit) - Esperando 4s antes de reintentar...
+2026-01-07 11:44:00,471 - nl2sql_chatbot - WARNING - ⚠️  Reintento 2/3 - Llamando a Gemini...
+2026-01-07 11:44:37,888 - nl2sql_chatbot - INFO - ℹ️  ⚡ Respuesta recibida de Gemini en 37.42s
+2026-01-07 11:44:37,890 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 312, 'candidates_tokens': 53, 'total_tokens': 365}
+2026-01-07 11:44:37,891 - nl2sql_chatbot - INFO - ℹ️  ✅ Éxito después de 2 reintento(s) en 47.97s
+2026-01-07 11:44:37,891 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT ESTADOCONTRATO, COUNT(*) AS cantidad_contratos FROM `bunge-de-poc-insumos.Bronce.viterra` GRO...
+2026-01-07 11:44:37,891 - nl2sql_chatbot - INFO - ℹ️  [a89b2a78] Paso 4: Ejecutando SQL en BigQuery
+2026-01-07 11:44:37,891 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Inicio execute_query
+2026-01-07 11:44:38,394 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Cliente obtenido en 0.503s
+2026-01-07 11:44:38,394 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-07 11:44:38,394 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT ESTADOCONTRATO, COUNT(*) AS cantidad_contratos FROM `bunge-de-poc-insumos.Bronce.viterra` GRO...
+2026-01-07 11:44:38,394 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Enviando query a BigQuery...
+2026-01-07 11:44:40,188 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Query enviada, esperando resultados...
+2026-01-07 11:44:40,709 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Resultados recibidos en 2.315s
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - ℹ️  Bytes procesados: 80,849 (0.08 MB)
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 2.82s
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 10
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - ℹ️  [a89b2a78] BigQuery completado (2.82s)
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: a89b2a78
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - ❓ Question: ¿Cuántos contratos hay por estado?
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - ⏱️  Total Time: 52.45s
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO -   - Get Schema: 1.66s
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 47.97s
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 2.82s
+2026-01-07 11:44:40,710 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT ESTADOCONTRATO, COUNT(*) AS cantidad_contratos FROM `bunge-de-poc-insumos.Bronce.viterra` GROUP BY ESTADOCONTRATO LIMIT 100
+2026-01-07 11:44:40,711 - nl2sql_chatbot - INFO - 📊 Rows: 10
+2026-01-07 11:44:40,711 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 312, 'candidates_tokens': 53, 'total_tokens': 365}
+2026-01-07 11:44:40,711 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-07 11:44:40,711 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-07 11:44:40,711 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:44:40,711 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [a89b2a78] completado exitosamente en 52.45s

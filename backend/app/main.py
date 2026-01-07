@@ -131,9 +131,12 @@ async def ask_question(request: AskRequest):
         steps.append({"name": "Generate SQL (Gemini)", "duration_ms": llm_result['duration_ms']})
         
         # 4. Ejecutar SQL en BigQuery
+        step_start = time.time()
         log_info(f"[{request_id}] Paso 4: Ejecutando SQL en BigQuery")
         bq_result = execute_query(sql)
-        steps.append({"name": "Execute SQL (BigQuery)", "duration_ms": bq_result['duration_ms']})
+        step_duration = (time.time() - step_start) * 1000
+        steps.append({"name": "Execute SQL (BigQuery)", "duration_ms": step_duration})
+        log_info(f"[{request_id}] BigQuery completado ({step_duration/1000:.2f}s)")
         
         # Calcular tiempo total
         total_time_ms = (time.time() - start_time) * 1000

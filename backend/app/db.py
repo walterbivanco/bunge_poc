@@ -98,16 +98,24 @@ def execute_query(sql: str, max_rows: int = 100) -> Dict[str, Any]:
     Raises:
         Exception: Si hay error en la ejecución
     """
-    client = get_bigquery_client()
     start_time = time.time()
+    log_info(f"🔵 [BQ] Inicio execute_query")
+    
+    client_start = time.time()
+    client = get_bigquery_client()
+    log_info(f"🔵 [BQ] Cliente obtenido en {(time.time()-client_start):.3f}s")
     
     log_info(f"Ejecutando query en BigQuery (max {max_rows} rows)")
     log_info(f"Query: {sql[:100]}..." if len(sql) > 100 else f"Query: {sql}")
     
     try:
         # Ejecutar la query
+        query_start = time.time()
+        log_info(f"🔵 [BQ] Enviando query a BigQuery...")
         query_job = client.query(sql)
+        log_info(f"🔵 [BQ] Query enviada, esperando resultados...")
         results = query_job.result(max_results=max_rows)
+        log_info(f"🔵 [BQ] Resultados recibidos en {(time.time()-query_start):.3f}s")
         
         # Extraer columnas
         columns = [field.name for field in results.schema]
