@@ -13,6 +13,7 @@ build/
 
 # Environment variables
 .env
+.env.local
 
 # Credentials (NUNCA commitear archivos de credenciales)
 *.json
@@ -30,8 +31,27 @@ credentials.json
 .idea/
 *.swp
 *.swo
+.DS_Store
 
 # OS
 .DS_Store
 Thumbs.db
 
+# Logs (mantener chatbot.log en desarrollo)
+*.log
+!chatbot.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Google Cloud
+*.json
+!cloudbuild.yaml
+credentials.json
+service-account-key.json

@@ -1,2 +1,84 @@
-<!-- UI simple tipo chat -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot NL → SQL | Bunge PoC</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div>
+                    <h1>💬 Chatbot NL → SQL</h1>
+                    <p class="subtitle">Pregunta sobre tus datos en lenguaje natural</p>
+                </div>
+                <button class="clear-btn" id="clear-chat-btn" title="Limpiar conversación">
+                    🗑️ Limpiar Chat
+                </button>
+            </div>
+            <div class="status" id="status">
+                <span class="status-dot" id="status-dot"></span>
+                <span id="status-text">Verificando conexión...</span>
+            </div>
+        </header>
+
+        <!-- Chat Area -->
+        <main class="chat-container">
+            <div class="messages" id="messages">
+                <!-- Mensaje de bienvenida -->
+                <div class="message bot">
+                    <div class="message-content">
+                        <p>👋 ¡Hola! Soy tu asistente de datos.</p>
+                        <p>Puedes hacerme preguntas como:</p>
+                        <ul>
+                            <li>"¿Cuántos contratos hay por estado?"</li>
+                            <li>"Muéstrame los últimos 10 contratos"</li>
+                            <li>"Contratos de SOJA en 2025"</li>
+                            <li>"¿Cuál es el precio promedio por producto?"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <form id="chat-form">
+                    <input 
+                        type="text" 
+                        id="question-input" 
+                        placeholder="Escribe tu pregunta aquí..." 
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="submit" id="send-btn">
+                        <span id="send-icon">Enviar</span>
+                        <span id="loading-icon" style="display: none;">⏳</span>
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-tech">
+                    <span>🤖 Powered by</span>
+                    <strong>Google Vertex AI Gemini 2.0</strong>
+                    <span>+</span>
+                    <strong>BigQuery</strong>
+                </div>
+                <div class="footer-deploy">
+                    <span>☁️ Deployed on</span>
+                    <strong>Google Cloud Run</strong>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
 

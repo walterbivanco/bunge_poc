@@ -1,0 +1,516 @@
+2026-01-07 10:52:01,808 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:52:14,270 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:52:16,111 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:52:20,736 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:52:28,555 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:52:42,060 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 10:52:42,060 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:52:42,060 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 10:53:02,182 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 10:53:02,182 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:53:02,182 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 10:53:10,361 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 10:53:10,361 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:53:10,361 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 10:53:11,894 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 10:53:11,894 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:53:11,894 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 10:54:20,748 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 10:54:20,748 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 10:54:20,748 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:06:47,509 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:06:47,509 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:06:47,509 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:07:02,623 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [31c01a23]: "Muéstrame los últimos 10 contratos
+2026-01-07 11:07:02,623 - nl2sql_chatbot - INFO - ℹ️  [31c01a23] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:07:04,319 - nl2sql_chatbot - INFO - ℹ️  [31c01a23] Schema obtenido (1695.67ms)
+2026-01-07 11:07:04,319 - nl2sql_chatbot - INFO - ℹ️  [31c01a23] Paso 2: Construyendo prompt
+2026-01-07 11:07:04,319 - nl2sql_chatbot - INFO - ℹ️  [31c01a23] Prompt construido (0.13ms, 2160 chars)
+2026-01-07 11:07:04,319 - nl2sql_chatbot - INFO - ℹ️  [31c01a23] Paso 3: Generando SQL con Gemini
+2026-01-07 11:07:04,319 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-07 11:07:04,321 - nl2sql_chatbot - INFO - ℹ️  Llamando a Gemini para generar SQL...
+2026-01-07 11:07:06,953 - nl2sql_chatbot - ERROR - ❌ Error generando SQL después de 2633.87ms: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 75, in error_remapped_callable
+    return callable_(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 1166, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 996, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.RESOURCE_EXHAUSTED
+	details = "Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details."
+	debug_error_string = "UNKNOWN:Error received from peer ipv4:142.251.128.234:443 {grpc_status:8, grpc_message:"Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details."}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 52, in nl_to_sql
+    response = model.generate_content(prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 654, in generate_content
+    return self._generate_content(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 779, in _generate_content
+    gapic_response = self._prediction_client.generate_content(request=request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/cloud/aiplatform_v1/services/prediction_service/client.py", line 2159, in generate_content
+    response = rpc(
+               ^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/gapic_v1/method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+2026-01-07 11:07:06,962 - nl2sql_chatbot - ERROR - ❌ [31c01a23] Error procesando pregunta: Error al generar SQL con Gemini: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 75, in error_remapped_callable
+    return callable_(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 1166, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 996, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.RESOURCE_EXHAUSTED
+	details = "Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details."
+	debug_error_string = "UNKNOWN:Error received from peer ipv4:142.251.128.234:443 {grpc_status:8, grpc_message:"Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details."}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 52, in nl_to_sql
+    response = model.generate_content(prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 654, in generate_content
+    return self._generate_content(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 779, in _generate_content
+    gapic_response = self._prediction_client.generate_content(request=request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/cloud/aiplatform_v1/services/prediction_service/client.py", line 2159, in generate_content
+    response = rpc(
+               ^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/gapic_v1/method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/main.py", line 129, in ask_question
+    llm_result = nl_to_sql(prompt)
+                 ^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 87, in nl_to_sql
+    raise Exception(f"Error al generar SQL con Gemini: {str(e)}")
+Exception: Error al generar SQL con Gemini: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+2026-01-07 11:07:06,966 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:07:06,967 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 31c01a23
+2026-01-07 11:07:06,967 - nl2sql_chatbot - INFO - ❓ Question: "Muéstrame los últimos 10 contratos
+2026-01-07 11:07:06,967 - nl2sql_chatbot - INFO - ⏱️  Total Time: 4339.80ms
+2026-01-07 11:07:06,968 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:07:06,968 - nl2sql_chatbot - INFO -   - Get Schema: 1695.67ms
+2026-01-07 11:07:06,968 - nl2sql_chatbot - INFO -   - Build Prompt: 0.13ms
+2026-01-07 11:07:06,968 - nl2sql_chatbot - ERROR - ❌ Error: Error al generar SQL con Gemini: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+2026-01-07 11:07:06,968 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:07:23,351 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [5162fd23]: Contratos de SOJA en 2025
+2026-01-07 11:07:23,352 - nl2sql_chatbot - INFO - ℹ️  [5162fd23] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:07:24,918 - nl2sql_chatbot - INFO - ℹ️  [5162fd23] Schema obtenido (1566.19ms)
+2026-01-07 11:07:24,919 - nl2sql_chatbot - INFO - ℹ️  [5162fd23] Paso 2: Construyendo prompt
+2026-01-07 11:07:24,919 - nl2sql_chatbot - INFO - ℹ️  [5162fd23] Prompt construido (0.14ms, 2150 chars)
+2026-01-07 11:07:24,919 - nl2sql_chatbot - INFO - ℹ️  [5162fd23] Paso 3: Generando SQL con Gemini
+2026-01-07 11:07:24,919 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-07 11:07:24,920 - nl2sql_chatbot - INFO - ℹ️  Llamando a Gemini para generar SQL...
+2026-01-07 11:07:26,630 - nl2sql_chatbot - ERROR - ❌ Error generando SQL después de 1710.28ms: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 75, in error_remapped_callable
+    return callable_(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 1166, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 996, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.RESOURCE_EXHAUSTED
+	details = "Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details."
+	debug_error_string = "UNKNOWN:Error received from peer ipv4:142.251.128.234:443 {grpc_message:"Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.", grpc_status:8}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 52, in nl_to_sql
+    response = model.generate_content(prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 654, in generate_content
+    return self._generate_content(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 779, in _generate_content
+    gapic_response = self._prediction_client.generate_content(request=request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/cloud/aiplatform_v1/services/prediction_service/client.py", line 2159, in generate_content
+    response = rpc(
+               ^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/gapic_v1/method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+2026-01-07 11:07:26,631 - nl2sql_chatbot - ERROR - ❌ [5162fd23] Error procesando pregunta: Error al generar SQL con Gemini: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 75, in error_remapped_callable
+    return callable_(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 1166, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/grpc/_channel.py", line 996, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.RESOURCE_EXHAUSTED
+	details = "Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details."
+	debug_error_string = "UNKNOWN:Error received from peer ipv4:142.251.128.234:443 {grpc_message:"Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.", grpc_status:8}"
+>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 52, in nl_to_sql
+    response = model.generate_content(prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 654, in generate_content
+    return self._generate_content(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 779, in _generate_content
+    gapic_response = self._prediction_client.generate_content(request=request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/cloud/aiplatform_v1/services/prediction_service/client.py", line 2159, in generate_content
+    response = rpc(
+               ^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/gapic_v1/method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/google/api_core/grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/main.py", line 129, in ask_question
+    llm_result = nl_to_sql(prompt)
+                 ^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 87, in nl_to_sql
+    raise Exception(f"Error al generar SQL con Gemini: {str(e)}")
+Exception: Error al generar SQL con Gemini: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+2026-01-07 11:07:26,633 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:07:26,633 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 5162fd23
+2026-01-07 11:07:26,633 - nl2sql_chatbot - INFO - ❓ Question: Contratos de SOJA en 2025
+2026-01-07 11:07:26,633 - nl2sql_chatbot - INFO - ⏱️  Total Time: 3280.27ms
+2026-01-07 11:07:26,633 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:07:26,633 - nl2sql_chatbot - INFO -   - Get Schema: 1566.19ms
+2026-01-07 11:07:26,633 - nl2sql_chatbot - INFO -   - Build Prompt: 0.14ms
+2026-01-07 11:07:26,634 - nl2sql_chatbot - ERROR - ❌ Error: Error al generar SQL con Gemini: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+2026-01-07 11:07:26,634 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:11:25,831 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:11:25,831 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:11:25,831 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:11:46,468 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [ee4feb60]: Muéstrame los últimos 10 contratos
+2026-01-07 11:11:46,468 - nl2sql_chatbot - INFO - ℹ️  [ee4feb60] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:11:47,846 - nl2sql_chatbot - INFO - ℹ️  [ee4feb60] Schema obtenido (1377.53ms)
+2026-01-07 11:11:47,846 - nl2sql_chatbot - INFO - ℹ️  [ee4feb60] Paso 2: Construyendo prompt
+2026-01-07 11:11:47,847 - nl2sql_chatbot - INFO - ℹ️  [ee4feb60] Prompt construido (0.49ms, 2159 chars)
+2026-01-07 11:11:47,847 - nl2sql_chatbot - INFO - ℹ️  [ee4feb60] Paso 3: Generando SQL con Gemini
+2026-01-07 11:11:47,847 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-07 11:11:47,848 - nl2sql_chatbot - INFO - ℹ️  Llamando a Gemini para generar SQL...
+2026-01-07 11:11:51,721 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 737, 'candidates_tokens': 34, 'total_tokens': 771}
+2026-01-07 11:11:51,721 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 3873.67ms
+2026-01-07 11:11:51,722 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` ORDER BY FECHACONCERTACION DESC LIMIT 10
+2026-01-07 11:11:51,722 - nl2sql_chatbot - INFO - ℹ️  [ee4feb60] Paso 4: Ejecutando SQL en BigQuery
+2026-01-07 11:12:54,834 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-07 11:12:54,835 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` ORDER BY FECHACONCERTACION DESC LIMIT 10
+2026-01-07 11:12:57,603 - nl2sql_chatbot - INFO - ℹ️  Bytes procesados: 1,824,066 (1.74 MB)
+2026-01-07 11:12:57,603 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 2768.76ms
+2026-01-07 11:12:57,603 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 10
+2026-01-07 11:12:57,603 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:12:57,603 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: ee4feb60
+2026-01-07 11:12:57,603 - nl2sql_chatbot - INFO - ❓ Question: Muéstrame los últimos 10 contratos
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO - ⏱️  Total Time: 71135.54ms
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO -   - Get Schema: 1377.53ms
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO -   - Build Prompt: 0.49ms
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 3873.67ms
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 2768.76ms
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` ORDER BY FECHACONCERTACION DESC LIMIT 10
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO - 📊 Rows: 10
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 737, 'candidates_tokens': 34, 'total_tokens': 771}
+2026-01-07 11:12:57,604 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-07 11:12:57,605 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-07 11:12:57,605 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:12:57,605 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [ee4feb60] completado exitosamente en 71135.54ms
+2026-01-07 11:14:36,534 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:14:36,534 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:14:36,534 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:14:38,573 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:14:38,573 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:14:38,573 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:14:41,518 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:14:41,519 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:14:41,519 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:14:43,824 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:14:43,824 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:14:43,825 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:14:45,302 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:14:45,302 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:14:45,303 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:14:48,764 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:14:48,765 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:14:48,765 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:14:51,219 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:14:51,219 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:14:51,219 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:14:53,688 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:14:53,688 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:14:53,688 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:14:55,173 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:14:55,173 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:14:55,173 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:15:35,080 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:15:35,081 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:15:35,081 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:15:44,705 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:15:44,705 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:15:44,706 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:15:49,376 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:15:49,376 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:15:49,376 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:16:07,272 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:16:07,272 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:16:07,272 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:17:33,403 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:17:33,404 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:17:33,404 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:18:06,776 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:18:06,776 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:18:06,777 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:18:22,121 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [88059123]: Muéstrame los últimos 10 contratos
+2026-01-07 11:18:22,122 - nl2sql_chatbot - INFO - ℹ️  [88059123] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:18:22,122 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery (sin caché)...
+2026-01-07 11:18:23,752 - nl2sql_chatbot - INFO - ℹ️  Schema cargado y cacheado en 1.63s (24 columnas)
+2026-01-07 11:18:23,753 - nl2sql_chatbot - INFO - ℹ️  [88059123] Schema obtenido (1.63s)
+2026-01-07 11:18:23,753 - nl2sql_chatbot - INFO - ℹ️  [88059123] Paso 2: Construyendo prompt
+2026-01-07 11:18:23,753 - nl2sql_chatbot - INFO - ℹ️  [88059123] Prompt construido (0.000s, 2159 chars)
+2026-01-07 11:18:23,753 - nl2sql_chatbot - INFO - ℹ️  [88059123] Paso 3: Generando SQL con Gemini
+2026-01-07 11:18:23,753 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-07 11:18:23,754 - nl2sql_chatbot - INFO - ℹ️  Llamando a Gemini para generar SQL...
+2026-01-07 11:18:34,910 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 737, 'candidates_tokens': 34, 'total_tokens': 771}
+2026-01-07 11:18:34,911 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 11.16s
+2026-01-07 11:18:34,911 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` ORDER BY FECHACONCERTACION DESC LIMIT 10
+2026-01-07 11:18:34,911 - nl2sql_chatbot - INFO - ℹ️  [88059123] Paso 4: Ejecutando SQL en BigQuery
+2026-01-07 11:18:35,325 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-07 11:18:35,325 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` ORDER BY FECHACONCERTACION DESC LIMIT 10
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 2.35s
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 10
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 88059123
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO - ❓ Question: Muéstrame los últimos 10 contratos
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO - ⏱️  Total Time: 15.56s
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO -   - Get Schema: 1.63s
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-07 11:18:37,680 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 11.16s
+2026-01-07 11:18:37,681 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 2.35s
+2026-01-07 11:18:37,681 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` ORDER BY FECHACONCERTACION DESC LIMIT 10
+2026-01-07 11:18:37,681 - nl2sql_chatbot - INFO - 📊 Rows: 10
+2026-01-07 11:18:37,681 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 737, 'candidates_tokens': 34, 'total_tokens': 771}
+2026-01-07 11:18:37,681 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-07 11:18:37,681 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-07 11:18:37,681 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:18:37,681 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [88059123] completado exitosamente en 15.56s
+2026-01-07 11:19:02,004 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [d6bcf93a]: Contratos de SOJA en 2025
+2026-01-07 11:19:02,005 - nl2sql_chatbot - INFO - ℹ️  [d6bcf93a] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:19:02,005 - nl2sql_chatbot - INFO - ℹ️  ✨ Schema obtenido desde caché (instantáneo)
+2026-01-07 11:19:02,005 - nl2sql_chatbot - INFO - ℹ️  [d6bcf93a] Schema obtenido (0.00s)
+2026-01-07 11:19:02,005 - nl2sql_chatbot - INFO - ℹ️  [d6bcf93a] Paso 2: Construyendo prompt
+2026-01-07 11:19:02,006 - nl2sql_chatbot - INFO - ℹ️  [d6bcf93a] Prompt construido (0.000s, 2150 chars)
+2026-01-07 11:19:02,006 - nl2sql_chatbot - INFO - ℹ️  [d6bcf93a] Paso 3: Generando SQL con Gemini
+2026-01-07 11:19:02,006 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-07 11:19:02,007 - nl2sql_chatbot - INFO - ℹ️  Llamando a Gemini para generar SQL...
+2026-01-07 11:19:10,838 - nl2sql_chatbot - WARNING - ⚠️  ⚠️  Error 429 (Rate Limit) - Esperando 2s antes de reintentar...
+2026-01-07 11:19:12,844 - nl2sql_chatbot - WARNING - ⚠️  Reintento 1/3 - Llamando a Gemini...
+2026-01-07 11:19:18,331 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 738, 'candidates_tokens': 53, 'total_tokens': 791}
+2026-01-07 11:19:18,333 - nl2sql_chatbot - INFO - ℹ️  ✅ Éxito después de 1 reintento(s) en 16.33s
+2026-01-07 11:19:18,333 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` WHERE PRODUCTO = 'SOJA' AND EXTRACT(YEAR FROM FE...
+2026-01-07 11:19:18,333 - nl2sql_chatbot - INFO - ℹ️  [d6bcf93a] Paso 4: Ejecutando SQL en BigQuery
+2026-01-07 11:19:18,868 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-07 11:19:18,868 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` WHERE PRODUCTO = 'SOJA' AND EXTRACT(YEAR FROM FE...
+2026-01-07 11:19:20,917 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 2.05s
+2026-01-07 11:19:20,917 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 100
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: d6bcf93a
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO - ❓ Question: Contratos de SOJA en 2025
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO - ⏱️  Total Time: 18.91s
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO -   - Get Schema: 0.00s
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 16.33s
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 2.05s
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` WHERE PRODUCTO = 'SOJA' AND EXTRACT(YEAR FROM FECHACONCERTACION) = 2025 LIMIT 100
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO - 📊 Rows: 100
+2026-01-07 11:19:20,918 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 738, 'candidates_tokens': 53, 'total_tokens': 791}
+2026-01-07 11:19:20,919 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-07 11:19:20,919 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-07 11:19:20,919 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:19:20,920 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [d6bcf93a] completado exitosamente en 18.91s
+2026-01-07 11:21:04,010 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:21:04,010 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:21:04,011 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:21:10,549 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:21:10,549 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:21:10,549 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:21:19,055 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:21:19,055 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:21:19,055 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:21:32,611 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:21:32,611 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:21:32,612 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:25:07,168 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:25:07,168 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:25:07,168 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:29:09,442 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:29:09,442 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:29:09,442 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:29:25,719 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [66333239]: Contratos de SOJA en 2025
+2026-01-07 11:29:25,719 - nl2sql_chatbot - INFO - ℹ️  [66333239] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:29:25,719 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery (sin caché)...
+2026-01-07 11:29:27,337 - nl2sql_chatbot - INFO - ℹ️  Schema cargado y cacheado en 1.62s (24 columnas)
+2026-01-07 11:29:27,338 - nl2sql_chatbot - INFO - ℹ️  [66333239] Schema obtenido (1.62s)
+2026-01-07 11:29:27,338 - nl2sql_chatbot - INFO - ℹ️  [66333239] Paso 2: Construyendo prompt
+2026-01-07 11:29:27,338 - nl2sql_chatbot - INFO - ℹ️  [66333239] Prompt construido (0.000s, 891 chars)
+2026-01-07 11:29:27,338 - nl2sql_chatbot - INFO - ℹ️  [66333239] Paso 3: Generando SQL con Gemini
+2026-01-07 11:29:27,338 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-07 11:29:27,340 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-07 11:29:27,348 - nl2sql_chatbot - ERROR - ❌ Error generando SQL después de 0.00s: 'HARM_CATEGORY_DANGEROUS_CONTENT' is not a valid HarmCategory
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 80, in nl_to_sql
+    response = model.generate_content(prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 654, in generate_content
+    return self._generate_content(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 771, in _generate_content
+    request = self._prepare_request(
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 3201, in _prepare_request
+    request_v1beta1 = super()._prepare_request(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 546, in _prepare_request
+    category=gapic_content_types.HarmCategory(category),
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.4/Frameworks/Python.framework/Versions/3.12/lib/python3.12/enum.py", line 757, in __call__
+    return cls.__new__(cls, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.4/Frameworks/Python.framework/Versions/3.12/lib/python3.12/enum.py", line 1171, in __new__
+    raise ve_exc
+ValueError: 'HARM_CATEGORY_DANGEROUS_CONTENT' is not a valid HarmCategory
+2026-01-07 11:29:27,355 - nl2sql_chatbot - ERROR - ❌ [66333239] Error procesando pregunta: Error al generar SQL con Gemini: 'HARM_CATEGORY_DANGEROUS_CONTENT' is not a valid HarmCategory
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 80, in nl_to_sql
+    response = model.generate_content(prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 654, in generate_content
+    return self._generate_content(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 771, in _generate_content
+    request = self._prepare_request(
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 3201, in _prepare_request
+    request_v1beta1 = super()._prepare_request(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/env/lib/python3.12/site-packages/vertexai/generative_models/_generative_models.py", line 546, in _prepare_request
+    category=gapic_content_types.HarmCategory(category),
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.4/Frameworks/Python.framework/Versions/3.12/lib/python3.12/enum.py", line 757, in __call__
+    return cls.__new__(cls, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.4/Frameworks/Python.framework/Versions/3.12/lib/python3.12/enum.py", line 1171, in __new__
+    raise ve_exc
+ValueError: 'HARM_CATEGORY_DANGEROUS_CONTENT' is not a valid HarmCategory
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/main.py", line 129, in ask_question
+    llm_result = nl_to_sql(prompt)
+                 ^^^^^^^^^^^^^^^^^
+  File "/Users/wb/desarrollo/taligent/bunge/poc/backend/app/llm.py", line 142, in nl_to_sql
+    raise Exception(f"Error al generar SQL con Gemini: {str(e)}")
+Exception: Error al generar SQL con Gemini: 'HARM_CATEGORY_DANGEROUS_CONTENT' is not a valid HarmCategory
+2026-01-07 11:29:27,357 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:29:27,357 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 66333239
+2026-01-07 11:29:27,357 - nl2sql_chatbot - INFO - ❓ Question: Contratos de SOJA en 2025
+2026-01-07 11:29:27,357 - nl2sql_chatbot - INFO - ⏱️  Total Time: 1.64s
+2026-01-07 11:29:27,357 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:29:27,357 - nl2sql_chatbot - INFO -   - Get Schema: 1.62s
+2026-01-07 11:29:27,357 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-07 11:29:27,358 - nl2sql_chatbot - ERROR - ❌ Error: Error al generar SQL con Gemini: 'HARM_CATEGORY_DANGEROUS_CONTENT' is not a valid HarmCategory
+2026-01-07 11:29:27,358 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:30:11,303 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:30:11,304 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:30:11,304 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:30:30,292 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:30:30,292 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:30:30,293 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:30:40,165 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-07 11:30:40,165 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-07 11:30:40,165 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-07 11:30:52,398 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [3900dc65]: Contratos de SOJA en 2025
+2026-01-07 11:30:52,399 - nl2sql_chatbot - INFO - ℹ️  [3900dc65] Paso 1: Obteniendo schema de BigQuery
+2026-01-07 11:30:52,399 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery (sin caché)...
+2026-01-07 11:30:54,338 - nl2sql_chatbot - INFO - ℹ️  Schema cargado y cacheado en 1.94s (24 columnas)
+2026-01-07 11:30:54,338 - nl2sql_chatbot - INFO - ℹ️  [3900dc65] Schema obtenido (1.94s)
+2026-01-07 11:30:54,338 - nl2sql_chatbot - INFO - ℹ️  [3900dc65] Paso 2: Construyendo prompt
+2026-01-07 11:30:54,339 - nl2sql_chatbot - INFO - ℹ️  [3900dc65] Prompt construido (0.000s, 891 chars)
+2026-01-07 11:30:54,339 - nl2sql_chatbot - INFO - ℹ️  [3900dc65] Paso 3: Generando SQL con Gemini
+2026-01-07 11:30:54,339 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-07 11:30:54,340 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-07 11:30:58,874 - nl2sql_chatbot - INFO - ℹ️  ⚡ Respuesta recibida de Gemini en 4.53s
+2026-01-07 11:30:58,876 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 315, 'candidates_tokens': 68, 'total_tokens': 383}
+2026-01-07 11:30:58,876 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 4.54s
+2026-01-07 11:30:58,876 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` WHERE PRODUCTO = 'SOJA' AND EXTRACT(YEAR FROM FE...
+2026-01-07 11:30:58,877 - nl2sql_chatbot - INFO - ℹ️  [3900dc65] Paso 4: Ejecutando SQL en BigQuery
+2026-01-07 11:32:02,000 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-07 11:32:02,001 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` WHERE PRODUCTO = 'SOJA' AND EXTRACT(YEAR FROM FE...
+2026-01-07 11:32:04,438 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 2.44s
+2026-01-07 11:32:04,438 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 100
+2026-01-07 11:32:04,438 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:32:04,438 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 3900dc65
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - ❓ Question: Contratos de SOJA en 2025
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - ⏱️  Total Time: 72.04s
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO -   - Get Schema: 1.94s
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 4.54s
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 2.44s
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT * FROM `bunge-de-poc-insumos.Bronce.viterra` WHERE PRODUCTO = 'SOJA' AND EXTRACT(YEAR FROM FECHACONCERTACION) = 2025 LIMIT 100
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - 📊 Rows: 100
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 315, 'candidates_tokens': 68, 'total_tokens': 383}
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-07 11:32:04,439 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [3900dc65] completado exitosamente en 72.04s
