@@ -3,11 +3,24 @@
 ## 🔧 Stack Tecnológico (100% Google)
 
 - **Backend**: FastAPI + Python
-- **LLM**: Vertex AI Gemini (gemini-1.5-flash)
+- **LLM**: Vertex AI Gemini (gemini-2.0-flash-exp)
+  - Conversión de lenguaje natural a SQL
+  - Recomendación inteligente de tipos de gráficos
 - **Base de Datos**: BigQuery
 - **Hosting**: Cloud Run
 - **CI/CD**: Cloud Build
-- **Frontend**: HTML/CSS/JS vanilla (servido desde Cloud Run)
+- **Frontend**: React + TypeScript + Vite + Tailwind CSS
+  - Interfaz de chat moderna
+  - Visualización automática de datos con gráficos (Recharts)
+  - Diseño responsive y temático
+
+## ✨ Características Principales
+
+- **Conversión NL→SQL**: Pregunta en lenguaje natural, obtén SQL ejecutable
+- **Visualización Inteligente**: El LLM analiza los datos y recomienda el tipo de gráfico más apropiado
+- **Gráficos Automáticos**: Bar, Line, Pie y Area charts generados automáticamente
+- **Interfaz Moderna**: Chat UI con React, TypeScript y Tailwind CSS
+- **Logging y Métricas**: Sistema completo de logging con tiempos, tokens y estadísticas
 
 ## 📋 Pre-requisitos
 
@@ -65,11 +78,40 @@ nano .env
 **Nota**: El archivo `key.json` está en `.gitignore` y NO será commiteado al repositorio.
 
 ### Desarrollo local
+
+#### Backend
 ```bash
-cd backend
+# Instalar dependencias
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+
+# Iniciar servidor
+cd backend
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
 ```
+
+#### Frontend
+```bash
+# Instalar dependencias
+cd frontend
+npm install
+
+# Modo desarrollo (con hot reload)
+# Corre en http://localhost:5173 y hace proxy de las APIs al backend en :8080
+npm run dev
+
+# Construir para producción
+npm run build
+```
+
+**Nota**: 
+- En desarrollo: El frontend corre en `http://localhost:5173` y hace proxy de las llamadas API al backend en `http://localhost:8080`
+- En producción: El frontend construido se genera en `frontend/dist/` y es servido automáticamente por el backend en el puerto 8080
+- **Dependencias principales del frontend**:
+  - `react` + `react-dom`: Framework React
+  - `recharts`: Librería de gráficos
+  - `tailwindcss`: Framework CSS utility-first
+  - `@radix-ui/*`: Componentes UI accesibles
+  - `lucide-react`: Iconos
 
 ### Deploy a Cloud Run
 ```bash
@@ -77,7 +119,64 @@ uvicorn app.main:app --reload
 ```
 
 ## 🗂️ Estructura del proyecto
-Ver estructura de directorios en el código.
+
+```
+poc/
+├── backend/
+│   ├── app/
+│   │   ├── main.py          # FastAPI app, endpoints principales
+│   │   ├── llm.py           # Integración con Vertex AI Gemini (NL→SQL + recomendación de gráficos)
+│   │   ├── db.py            # Conexión y ejecución de queries en BigQuery
+│   │   ├── prompts.py       # Prompts para el LLM
+│   │   ├── models.py        # Modelos Pydantic (request/response)
+│   │   └── logger.py        # Sistema de logging y métricas
+│   ├── Dockerfile           # Container para Cloud Run
+│   └── chatbot.log          # Logs de la aplicación
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   └── Index.tsx   # Página principal del chat
+│   │   ├── components/
+│   │   │   └── chat/       # Componentes del chat
+│   │   │       ├── ChatMessage.tsx    # Mensaje individual (con gráficos)
+│   │   │       ├── ChatArea.tsx       # Área de mensajes
+│   │   │       ├── ChatInputArea.tsx  # Input del usuario
+│   │   │       ├── ChatSidebar.tsx    # Sidebar con conversaciones
+│   │   │       ├── WelcomeScreen.tsx  # Pantalla de bienvenida
+│   │   │       └── DataChart.tsx      # Componente de gráficos
+│   │   └── lib/
+│   │       └── chartUtils.ts # Tipos para gráficos
+│   ├── dist/                # Build de producción
+│   └── package.json         # Dependencias del frontend
+├── requirements.txt         # Dependencias de Python
+├── .env.example            # Template de variables de entorno
+└── README.md               # Este archivo
+```
+
+## 📊 Sistema de Visualización de Datos
+
+El sistema utiliza **Gemini (LLM)** para analizar los resultados de las consultas y recomendar automáticamente el tipo de gráfico más apropiado:
+
+1. **Análisis Inteligente**: Después de ejecutar una consulta SQL, el LLM analiza:
+   - La pregunta original del usuario
+   - La estructura de los datos (columnas, tipos)
+   - Una muestra de los resultados
+
+2. **Recomendación de Gráfico**: El LLM determina si los datos deben visualizarse y qué tipo de gráfico usar:
+   - **Bar Chart**: Para datos categóricos vs numéricos
+   - **Line Chart**: Para series temporales o datos secuenciales
+   - **Pie Chart**: Para distribuciones de categorías (máx 10 categorías)
+   - **Area Chart**: Para datos acumulativos en el tiempo
+   - **null**: Si los datos no son adecuados para visualización
+
+3. **Renderizado Automático**: El frontend renderiza el gráfico recomendado usando Recharts
+
+### Ejemplos de Consultas que Generan Gráficos
+
+- "How many contracts are there by status?" → Pie Chart
+- "Show me sales over time" → Line Chart
+- "Average price per product" → Bar Chart
+- "Total revenue by region" → Bar Chart
 
 ## Instalación de herramientas de Google
 
@@ -121,3 +220,49 @@ Cannot add the project "bunge-de-poc-insumos" to ADC as the quota project becaus
 8.  Para verificar que todo este bien
 
 gcloud auth application-default print-access-token
+
+## 📦 Dependencias
+
+### Backend (Python)
+
+Las dependencias están en `requirements.txt`. Para instalar:
+
+```bash
+pip install -r requirements.txt
+```
+
+**Principales dependencias**:
+- `google-cloud-aiplatform`: Integración con Vertex AI Gemini
+- `google-cloud-bigquery`: Cliente de BigQuery
+- `fastapi`: Framework web
+- `uvicorn`: Servidor ASGI
+- `pydantic`: Validación de datos
+
+### Frontend (Node.js)
+
+Las dependencias están en `frontend/package.json`. Para instalar:
+
+```bash
+cd frontend
+npm install
+```
+
+**Principales dependencias**:
+- `react` + `react-dom`: Framework React
+- `recharts`: Librería de gráficos (Bar, Line, Pie, Area)
+- `tailwindcss`: Framework CSS utility-first
+- `@radix-ui/*`: Componentes UI accesibles y modulares
+- `lucide-react`: Iconos SVG
+- `@tanstack/react-query`: Manejo de estado del servidor
+- `react-router-dom`: Routing del frontend
+- `typescript`: Tipado estático
+
+## 🔍 Endpoints de la API
+
+- `POST /ask`: Endpoint principal para hacer preguntas en lenguaje natural
+  - Request: `{ "question": "tu pregunta aquí" }`
+  - Response: `{ "sql": "...", "columns": [...], "rows": [...], "total_rows": N, "chart_type": "bar|line|pie|area|null", "chart_config": {...} }`
+- `GET /health`: Health check del servicio
+- `GET /schema`: Obtener el schema de la tabla (con caché)
+- `GET /metrics`: Métricas y estadísticas del sistema
+- `GET /logs`: Últimos logs del sistema

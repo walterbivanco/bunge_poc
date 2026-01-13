@@ -2,7 +2,7 @@
 Modelos Pydantic para validación de request/response
 """
 from pydantic import BaseModel, Field
-from typing import List, Any, Optional
+from typing import List, Any, Optional, Dict
 
 
 class AskRequest(BaseModel):
@@ -28,6 +28,8 @@ class AskResponse(BaseModel):
     columns: List[str] = Field(..., description="Nombres de las columnas")
     rows: List[List[Any]] = Field(..., description="Filas de resultados")
     total_rows: int = Field(..., description="Total de filas retornadas")
+    chart_type: Optional[str] = Field(None, description="Tipo de gráfico recomendado: 'bar', 'line', 'pie', 'area', o null")
+    chart_config: Optional[Dict[str, Any]] = Field(None, description="Configuración del gráfico (xKey, yKey, etc.)")
     
     class Config:
         json_schema_extra = {

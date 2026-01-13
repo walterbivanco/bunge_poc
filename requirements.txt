@@ -1,23 +1,31 @@
-# Dependencias principales del proyecto
+# Dependencias principales del proyecto - Backend
 
 # Google Cloud - Vertex AI (Gemini)
+# Usado para: Conversión NL→SQL y recomendación de tipos de gráficos
 google-cloud-aiplatform==1.71.1
 
 # Google Cloud - BigQuery
+# Usado para: Ejecución de consultas SQL y acceso a datos
 google-cloud-bigquery==3.26.0
 db-dtypes==1.3.0
 
 # Google Cloud - Core
+# Usado para: Autenticación y configuración de servicios GCP
 google-auth==2.35.0
 google-cloud-core==2.4.1
 
 # Framework web (para el backend)
+# FastAPI: Framework web asíncrono
+# Uvicorn: Servidor ASGI para FastAPI
+# Pydantic: Validación de datos y modelos
 fastapi==0.115.5
 uvicorn[standard]==0.32.0
 pydantic==2.10.2
 pydantic-settings==2.6.1
 
 # Utilidades
+# python-dotenv: Carga de variables de entorno desde .env
+# python-multipart: Soporte para formularios multipart
 python-dotenv==1.0.1
 python-multipart==0.0.17
 

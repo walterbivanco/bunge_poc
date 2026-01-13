@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 
 from app.models import AskRequest, AskResponse, ErrorResponse, HealthResponse
 from app.prompts import get_prompt
-from app.llm import init_vertex_ai, nl_to_sql
+from app.llm import init_vertex_ai, nl_to_sql, recommend_chart_type
 from app.db import get_table_schema, execute_query, test_connection
 from app.logger import metrics_collector, log_info, log_error, log_warning
 
@@ -47,7 +47,12 @@ app.add_middleware(
 
 @app.get("/", include_in_schema=False)
 async def root():
-    """Servir el frontend"""
+    """Servir el frontend construido"""
+    # Intentar servir desde dist (build de producción)
+    dist_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend", "dist", "index.html")
+    if os.path.exists(dist_path):
+        return FileResponse(dist_path)
+    # Fallback a index.html del frontend (desarrollo)
     frontend_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend", "index.html")
     return FileResponse(frontend_path)
 
@@ -138,6 +143,24 @@ async def ask_question(request: AskRequest):
         steps.append({"name": "Execute SQL (BigQuery)", "duration_ms": step_duration})
         log_info(f"[{request_id}] BigQuery completado ({step_duration/1000:.2f}s)")
         
+        # 5. Analizar datos y recomendar tipo de gráfico
+        chart_recommendation = None
+        if bq_result["total_rows"] > 0 and bq_result["total_rows"] <= 100:
+            step_start = time.time()
+            log_info(f"[{request_id}] Paso 5: Analizando datos para recomendación de gráfico")
+            try:
+                chart_recommendation = recommend_chart_type(
+                    question=request.question,
+                    columns=bq_result["columns"],
+                    rows=bq_result["rows"]
+                )
+                step_duration = (time.time() - step_start) * 1000
+                steps.append({"name": "Chart Recommendation", "duration_ms": step_duration})
+                log_info(f"[{request_id}] Recomendación de gráfico: {chart_recommendation.get('chart_type', 'none')}")
+            except Exception as e:
+                log_warning(f"[{request_id}] Error al recomendar gráfico: {e}")
+                chart_recommendation = {"chart_type": None, "chart_config": None}
+        
         # Calcular tiempo total
         total_time_ms = (time.time() - start_time) * 1000
         
@@ -155,7 +178,7 @@ async def ask_question(request: AskRequest):
             "success": True
         })
         
-        # 5. Retornar respuesta
+        # 6. Retornar respuesta
         log_info(f"✅ Request [{request_id}] completado exitosamente en {total_time_ms/1000:.2f}s")
         
         return AskResponse(
@@ -163,7 +186,9 @@ async def ask_question(request: AskRequest):
             sql=sql,
             columns=bq_result["columns"],
             rows=bq_result["rows"],
-            total_rows=bq_result["total_rows"]
+            total_rows=bq_result["total_rows"],
+            chart_type=chart_recommendation.get("chart_type") if chart_recommendation else None,
+            chart_config=chart_recommendation.get("chart_config") if chart_recommendation else None
         )
         
     except ValueError as e:
@@ -267,9 +292,36 @@ async def get_logs(lines: int = 50):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# Montar archivos estáticos del frontend
-frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend")
-app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
+# Montar archivos estáticos del frontend construido
+frontend_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend", "dist")
+frontend_src = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend")
+
+# Rutas de API que no deben ser capturadas por el SPA
+API_ROUTES = ["/ask", "/health", "/schema", "/metrics", "/logs", "/docs", "/openapi.json", "/redoc"]
+
+# Priorizar dist (build de producción) si existe
+if os.path.exists(frontend_dist):
+    # Montar assets estáticos
+    assets_dir = os.path.join(frontend_dist, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+    
+    # Servir otros archivos estáticos del build y manejar routing de React
+    @app.get("/{path:path}", include_in_schema=False)
+    async def serve_spa(path: str):
+        """Servir archivos del SPA o redirigir a index.html para routing de React"""
+        # No interceptar rutas de API
+        if path in API_ROUTES or path.startswith(tuple(API_ROUTES)):
+            raise HTTPException(status_code=404, detail="Not found")
+        
+        full_path = os.path.join(frontend_dist, path)
+        if os.path.exists(full_path) and os.path.isfile(full_path):
+            return FileResponse(full_path)
+        # Si no existe, servir index.html para que React Router maneje la ruta
+        return FileResponse(os.path.join(frontend_dist, "index.html"))
+else:
+    # Fallback: servir desde el directorio fuente (desarrollo)
+    app.mount("/static", StaticFiles(directory=frontend_src), name="static")
 
 
 if __name__ == "__main__":

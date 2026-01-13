@@ -136,6 +136,115 @@ def nl_to_sql(prompt: str, model_name: Optional[str] = None, max_retries: int = 
             raise Exception(f"Error al generar SQL con Gemini: {str(e)}")
 
 
+def recommend_chart_type(
+    question: str,
+    columns: list,
+    rows: list,
+    max_rows_sample: int = 20
+) -> Dict[str, Any]:
+    """
+    Usa Gemini para analizar los datos y recomendar el tipo de gráfico más apropiado
+    
+    Args:
+        question: Pregunta original del usuario
+        columns: Lista de nombres de columnas
+        rows: Lista de filas de datos (muestra limitada)
+        max_rows_sample: Número máximo de filas a enviar al LLM
+        
+    Returns:
+        Dict con chart_type y chart_config, o None si no se recomienda gráfico
+    """
+    if not columns or not rows or len(rows) == 0:
+        return {"chart_type": None, "chart_config": None}
+    
+    # Limitar filas para no exceder tokens
+    sample_rows = rows[:max_rows_sample]
+    
+    # Preparar datos en formato legible
+    data_sample = []
+    for row in sample_rows:
+        row_dict = {}
+        for i, col in enumerate(columns):
+            row_dict[col] = row[i] if i < len(row) else None
+        data_sample.append(row_dict)
+    
+    prompt = f"""Analyze the following query results and determine if a chart would be helpful for visualization.
+
+User Question: "{question}"
+
+Columns: {', '.join(columns)}
+Total Rows: {len(rows)}
+Sample Data (first {len(sample_rows)} rows):
+{str(data_sample)}
+
+Based on the question, data structure, and sample values, determine:
+1. Should this data be visualized? (yes/no)
+2. If yes, what chart type is most appropriate? Options: "bar", "line", "pie", "area", or null
+3. Which column should be on the X-axis? (column name)
+4. Which column should be on the Y-axis? (column name, or "value" for pie charts)
+
+Consider:
+- Bar charts for categorical X with numeric Y
+- Line charts for time series or sequential data
+- Pie charts for distribution of a single categorical variable (max 10 categories)
+- Area charts for cumulative data over time
+- null if data is not suitable for visualization (too many rows, no clear pattern, etc.)
+
+Respond ONLY with valid JSON in this exact format:
+{{
+    "should_visualize": true/false,
+    "chart_type": "bar"|"line"|"pie"|"area"|null,
+    "xKey": "column_name"|null,
+    "yKey": "column_name"|"value"|null
+}}
+"""
+    
+    try:
+        model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-exp")
+        model = GenerativeModel(
+            model_name,
+            generation_config={
+                "temperature": 0.3,
+                "top_p": 0.8,
+                "top_k": 10,
+                "max_output_tokens": 256,
+                "candidate_count": 1,
+            }
+        )
+        
+        log_info("📊 Analizando datos con Gemini para recomendar tipo de gráfico...")
+        response = model.generate_content(prompt)
+        
+        # Extraer JSON de la respuesta
+        import json
+        response_text = response.text.strip()
+        
+        # Limpiar markdown si existe
+        if "```json" in response_text:
+            response_text = response_text.split("```json")[1].split("```")[0].strip()
+        elif "```" in response_text:
+            response_text = response_text.split("```")[1].split("```")[0].strip()
+        
+        result = json.loads(response_text)
+        
+        if result.get("should_visualize") and result.get("chart_type"):
+            log_info(f"✅ Gráfico recomendado: {result['chart_type']}")
+            return {
+                "chart_type": result["chart_type"],
+                "chart_config": {
+                    "xKey": result.get("xKey"),
+                    "yKey": result.get("yKey"),
+                }
+            }
+        else:
+            log_info("ℹ️ No se recomienda visualización para estos datos")
+            return {"chart_type": None, "chart_config": None}
+            
+    except Exception as e:
+        log_warning(f"Error al analizar datos para gráfico: {e}")
+        return {"chart_type": None, "chart_config": None}
+
+
 def extract_sql_from_response(response_text: str) -> str:
     """
     Extrae el SQL limpio de la respuesta del modelo
