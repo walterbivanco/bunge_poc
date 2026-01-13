@@ -8,6 +8,10 @@ echo ""
 # Activar virtualenv
 source env/bin/activate
 
+# Corregir VIRTUAL_ENV si tiene ruta incorrecta
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export VIRTUAL_ENV="$SCRIPT_DIR/env"
+
 # Verificar .env
 if [ ! -f .env ]; then
     echo "❌ Error: No existe archivo .env"

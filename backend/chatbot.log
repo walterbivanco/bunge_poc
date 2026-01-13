@@ -1276,3 +1276,149 @@ Exception: Error al generar SQL con Gemini: 404 Publisher Model `projects/bunge-
 2026-01-13 12:56:10,500 - nl2sql_chatbot - INFO - ✅ Success
 2026-01-13 12:56:10,501 - nl2sql_chatbot - INFO - ================================================================================
 2026-01-13 12:56:10,501 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [634c2e19] completado exitosamente en 6.53s
+2026-01-13 14:28:45,169 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-13 14:28:45,169 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-13 14:28:45,169 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-13 14:36:02,670 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [5497f7d6]: How many contracts are there by status
+2026-01-13 14:36:02,671 - nl2sql_chatbot - INFO - ℹ️  [5497f7d6] Paso 1: Obteniendo schema de BigQuery
+2026-01-13 14:36:02,671 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery (sin caché)...
+2026-01-13 14:36:04,745 - nl2sql_chatbot - INFO - ℹ️  Schema cargado y cacheado en 2.07s (14 columnas)
+2026-01-13 14:36:04,746 - nl2sql_chatbot - INFO - ℹ️  [5497f7d6] Schema obtenido (2.07s)
+2026-01-13 14:36:04,746 - nl2sql_chatbot - INFO - ℹ️  [5497f7d6] Paso 2: Construyendo prompt
+2026-01-13 14:36:04,746 - nl2sql_chatbot - INFO - ℹ️  [5497f7d6] Prompt construido (0.000s, 656 chars)
+2026-01-13 14:36:04,746 - nl2sql_chatbot - INFO - ℹ️  [5497f7d6] Paso 3: Generando SQL con Gemini
+2026-01-13 14:36:04,746 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-13 14:36:04,747 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-13 14:36:07,985 - nl2sql_chatbot - INFO - ℹ️  ⚡ Respuesta recibida de Gemini en 3.24s
+2026-01-13 14:36:07,987 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 187, 'candidates_tokens': 129, 'total_tokens': 316}
+2026-01-13 14:36:07,987 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 3.24s
+2026-01-13 14:36:07,987 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT COUNT(DISTINCT CASE WHEN total_quantity > total_quantity_delivered THEN 'Open' ELSE NULL END)...
+2026-01-13 14:36:07,987 - nl2sql_chatbot - INFO - ℹ️  [5497f7d6] Paso 4: Ejecutando SQL en BigQuery
+2026-01-13 14:36:07,988 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Inicio execute_query
+2026-01-13 14:37:11,256 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Cliente obtenido en 63.268s
+2026-01-13 14:37:11,258 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-13 14:37:11,258 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT COUNT(DISTINCT CASE WHEN total_quantity > total_quantity_delivered THEN 'Open' ELSE NULL END)...
+2026-01-13 14:37:11,259 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Enviando query a BigQuery...
+2026-01-13 14:37:12,623 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Query enviada, esperando resultados...
+2026-01-13 14:37:13,095 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Resultados recibidos en 1.837s
+2026-01-13 14:37:13,096 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 65.11s
+2026-01-13 14:37:13,096 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 1
+2026-01-13 14:37:13,096 - nl2sql_chatbot - INFO - ℹ️  [5497f7d6] BigQuery completado (65.11s)
+2026-01-13 14:37:13,096 - nl2sql_chatbot - INFO - ℹ️  [5497f7d6] Paso 5: Analizando datos para recomendación de gráfico
+2026-01-13 14:37:13,097 - nl2sql_chatbot - INFO - ℹ️  📊 Analizando datos con Gemini para recomendar tipo de gráfico...
+2026-01-13 14:37:15,147 - nl2sql_chatbot - INFO - ℹ️  ✅ Gráfico recomendado: bar
+2026-01-13 14:37:15,147 - nl2sql_chatbot - INFO - ℹ️  [5497f7d6] Recomendación de gráfico: bar
+2026-01-13 14:37:15,148 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-13 14:37:15,148 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 5497f7d6
+2026-01-13 14:37:15,148 - nl2sql_chatbot - INFO - ❓ Question: How many contracts are there by status
+2026-01-13 14:37:15,148 - nl2sql_chatbot - INFO - ⏱️  Total Time: 72.48s
+2026-01-13 14:37:15,148 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-13 14:37:15,148 - nl2sql_chatbot - INFO -   - Get Schema: 2.07s
+2026-01-13 14:37:15,148 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-13 14:37:15,148 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 3.24s
+2026-01-13 14:37:15,149 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 65.11s
+2026-01-13 14:37:15,149 - nl2sql_chatbot - INFO -   - Chart Recommendation: 2.05s
+2026-01-13 14:37:15,149 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT COUNT(DISTINCT CASE WHEN total_quantity > total_quantity_delivered THEN 'Open' ELSE NULL END) AS Open_Contracts, COUNT(DISTINCT CASE WHEN total_quantity = total_quantity_delivered THEN 'Delivered' ELSE NULL END) AS Delivered_Contracts, COUNT(DISTINCT CASE WHEN total_quantity_delivered = total_quantity_settled THEN 'Settled' ELSE NULL END) AS Settled_Contracts FROM `bunge-de-poc-insumos.Gold.contracts_gold` LIMIT 100
+2026-01-13 14:37:15,149 - nl2sql_chatbot - INFO - 📊 Rows: 1
+2026-01-13 14:37:15,149 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 187, 'candidates_tokens': 129, 'total_tokens': 316}
+2026-01-13 14:37:15,149 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-13 14:37:15,149 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-13 14:37:15,149 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-13 14:37:15,149 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [5497f7d6] completado exitosamente en 72.48s
+2026-01-13 14:37:37,947 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [78b775c1]: What is the count of contracts by province
+2026-01-13 14:37:37,950 - nl2sql_chatbot - INFO - ℹ️  [78b775c1] Paso 1: Obteniendo schema de BigQuery
+2026-01-13 14:37:37,950 - nl2sql_chatbot - INFO - ℹ️  ✨ Schema obtenido desde caché (instantáneo)
+2026-01-13 14:37:37,951 - nl2sql_chatbot - INFO - ℹ️  [78b775c1] Schema obtenido (0.00s)
+2026-01-13 14:37:37,951 - nl2sql_chatbot - INFO - ℹ️  [78b775c1] Paso 2: Construyendo prompt
+2026-01-13 14:37:37,951 - nl2sql_chatbot - INFO - ℹ️  [78b775c1] Prompt construido (0.000s, 660 chars)
+2026-01-13 14:37:37,951 - nl2sql_chatbot - INFO - ℹ️  [78b775c1] Paso 3: Generando SQL con Gemini
+2026-01-13 14:37:37,951 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-13 14:37:37,954 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-13 14:37:39,542 - nl2sql_chatbot - INFO - ℹ️  ⚡ Respuesta recibida de Gemini en 1.59s
+2026-01-13 14:37:39,543 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 188, 'candidates_tokens': 51, 'total_tokens': 239}
+2026-01-13 14:37:39,543 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 1.59s
+2026-01-13 14:37:39,543 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT delivery_province, COUNT(DISTINCT customer) AS contract_count FROM `bunge-de-poc-insumos.Gold...
+2026-01-13 14:37:39,544 - nl2sql_chatbot - INFO - ℹ️  [78b775c1] Paso 4: Ejecutando SQL en BigQuery
+2026-01-13 14:37:39,544 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Inicio execute_query
+2026-01-13 14:37:40,200 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Cliente obtenido en 0.656s
+2026-01-13 14:37:40,201 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-13 14:37:40,201 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT delivery_province, COUNT(DISTINCT customer) AS contract_count FROM `bunge-de-poc-insumos.Gold...
+2026-01-13 14:37:40,201 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Enviando query a BigQuery...
+2026-01-13 14:37:41,631 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Query enviada, esperando resultados...
+2026-01-13 14:37:42,034 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Resultados recibidos en 1.833s
+2026-01-13 14:37:42,034 - nl2sql_chatbot - INFO - ℹ️  Bytes procesados: 103,687 (0.10 MB)
+2026-01-13 14:37:42,034 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 2.49s
+2026-01-13 14:37:42,035 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 5
+2026-01-13 14:37:42,035 - nl2sql_chatbot - INFO - ℹ️  [78b775c1] BigQuery completado (2.49s)
+2026-01-13 14:37:42,035 - nl2sql_chatbot - INFO - ℹ️  [78b775c1] Paso 5: Analizando datos para recomendación de gráfico
+2026-01-13 14:37:42,035 - nl2sql_chatbot - INFO - ℹ️  📊 Analizando datos con Gemini para recomendar tipo de gráfico...
+2026-01-13 14:37:43,505 - nl2sql_chatbot - INFO - ℹ️  ✅ Gráfico recomendado: bar
+2026-01-13 14:37:43,506 - nl2sql_chatbot - INFO - ℹ️  [78b775c1] Recomendación de gráfico: bar
+2026-01-13 14:37:43,507 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-13 14:37:43,508 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 78b775c1
+2026-01-13 14:37:43,508 - nl2sql_chatbot - INFO - ❓ Question: What is the count of contracts by province
+2026-01-13 14:37:43,508 - nl2sql_chatbot - INFO - ⏱️  Total Time: 5.56s
+2026-01-13 14:37:43,508 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-13 14:37:43,509 - nl2sql_chatbot - INFO -   - Get Schema: 0.00s
+2026-01-13 14:37:43,509 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-13 14:37:43,509 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 1.59s
+2026-01-13 14:37:43,509 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 2.49s
+2026-01-13 14:37:43,509 - nl2sql_chatbot - INFO -   - Chart Recommendation: 1.47s
+2026-01-13 14:37:43,510 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT delivery_province, COUNT(DISTINCT customer) AS contract_count FROM `bunge-de-poc-insumos.Gold.contracts_gold` GROUP BY delivery_province LIMIT 100
+2026-01-13 14:37:43,510 - nl2sql_chatbot - INFO - 📊 Rows: 5
+2026-01-13 14:37:43,510 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 188, 'candidates_tokens': 51, 'total_tokens': 239}
+2026-01-13 14:37:43,510 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-13 14:37:43,510 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-13 14:37:43,510 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-13 14:37:43,510 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [78b775c1] completado exitosamente en 5.56s
+2026-01-13 15:44:41,382 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-13 15:44:41,383 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-13 15:44:41,383 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-13 15:45:03,993 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [9c9868d4]: Show me the average price per product type
+2026-01-13 15:45:03,993 - nl2sql_chatbot - INFO - ℹ️  [9c9868d4] Paso 1: Obteniendo schema de BigQuery
+2026-01-13 15:45:03,993 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery (sin caché)...
+2026-01-13 15:45:04,026 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-13 15:45:05,059 - nl2sql_chatbot - INFO - ℹ️  Schema cargado y cacheado en 1.07s (14 columnas)
+2026-01-13 15:45:05,059 - nl2sql_chatbot - INFO - ℹ️  [9c9868d4] Schema obtenido (1.07s)
+2026-01-13 15:45:05,059 - nl2sql_chatbot - INFO - ℹ️  [9c9868d4] Paso 2: Construyendo prompt
+2026-01-13 15:45:05,059 - nl2sql_chatbot - INFO - ℹ️  [9c9868d4] Prompt construido (0.000s, 660 chars)
+2026-01-13 15:45:05,059 - nl2sql_chatbot - INFO - ℹ️  [9c9868d4] Paso 3: Generando SQL con Gemini
+2026-01-13 15:45:05,059 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-13 15:45:05,060 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-13 15:45:08,966 - nl2sql_chatbot - INFO - ℹ️  ⚡ Respuesta recibida de Gemini en 3.91s
+2026-01-13 15:45:08,968 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 188, 'candidates_tokens': 47, 'total_tokens': 235}
+2026-01-13 15:45:08,968 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 3.91s
+2026-01-13 15:45:08,968 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT product, AVG(average_price) AS average_price FROM `bunge-de-poc-insumos.Gold.contracts_gold` ...
+2026-01-13 15:45:08,968 - nl2sql_chatbot - INFO - ℹ️  [9c9868d4] Paso 4: Ejecutando SQL en BigQuery
+2026-01-13 15:45:08,968 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Inicio execute_query
+2026-01-13 15:45:08,987 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-13 15:45:08,988 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Cliente obtenido en 0.019s
+2026-01-13 15:45:08,988 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-13 15:45:08,988 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT product, AVG(average_price) AS average_price FROM `bunge-de-poc-insumos.Gold.contracts_gold` ...
+2026-01-13 15:45:08,988 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Enviando query a BigQuery...
+2026-01-13 15:45:10,331 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Query enviada, esperando resultados...
+2026-01-13 15:45:10,720 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Resultados recibidos en 1.732s
+2026-01-13 15:45:10,722 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 1.75s
+2026-01-13 15:45:10,722 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 4
+2026-01-13 15:45:10,722 - nl2sql_chatbot - INFO - ℹ️  [9c9868d4] BigQuery completado (1.75s)
+2026-01-13 15:45:10,722 - nl2sql_chatbot - INFO - ℹ️  [9c9868d4] Paso 5: Analizando datos para recomendación de gráfico
+2026-01-13 15:45:10,723 - nl2sql_chatbot - INFO - ℹ️  📊 Analizando datos con Gemini para recomendar tipo de gráfico...
+2026-01-13 15:45:15,318 - nl2sql_chatbot - INFO - ℹ️  ✅ Gráfico recomendado: bar
+2026-01-13 15:45:15,318 - nl2sql_chatbot - INFO - ℹ️  [9c9868d4] Recomendación de gráfico: bar
+2026-01-13 15:45:15,318 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-13 15:45:15,319 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 9c9868d4
+2026-01-13 15:45:15,319 - nl2sql_chatbot - INFO - ❓ Question: Show me the average price per product type
+2026-01-13 15:45:15,319 - nl2sql_chatbot - INFO - ⏱️  Total Time: 11.33s
+2026-01-13 15:45:15,319 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-13 15:45:15,319 - nl2sql_chatbot - INFO -   - Get Schema: 1.07s
+2026-01-13 15:45:15,319 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-13 15:45:15,319 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 3.91s
+2026-01-13 15:45:15,319 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 1.75s
+2026-01-13 15:45:15,319 - nl2sql_chatbot - INFO -   - Chart Recommendation: 4.60s
+2026-01-13 15:45:15,320 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT product, AVG(average_price) AS average_price FROM `bunge-de-poc-insumos.Gold.contracts_gold` GROUP BY product LIMIT 100
+2026-01-13 15:45:15,320 - nl2sql_chatbot - INFO - 📊 Rows: 4
+2026-01-13 15:45:15,320 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 188, 'candidates_tokens': 47, 'total_tokens': 235}
+2026-01-13 15:45:15,320 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-13 15:45:15,320 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-13 15:45:15,320 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-13 15:45:15,320 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [9c9868d4] completado exitosamente en 11.33s
