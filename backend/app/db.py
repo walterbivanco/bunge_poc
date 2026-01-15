@@ -9,6 +9,7 @@ from app.logger import log_info, log_error, log_warning
 
 # ⚡ Caché del schema para evitar consultas repetidas a BigQuery
 _SCHEMA_CACHE: Dict[str, str] = {}
+_DIMENSIONS_CACHE: Dict[str, Dict[str, str]] = {}
 
 
 def get_bigquery_client() -> bigquery.Client:
@@ -23,6 +24,45 @@ def get_bigquery_client() -> bigquery.Client:
         raise ValueError("PROJECT_ID no está configurado")
     
     return bigquery.Client(project=project_id)
+
+
+def _get_single_table_schema(table_id: str, use_cache: bool = True) -> str:
+    """
+    Obtiene el schema de una tabla específica en formato texto
+    
+    Args:
+        table_id: ID completo de la tabla (project.dataset.table)
+        use_cache: Si True, usa el caché del schema
+    
+    Returns:
+        Schema en formato texto compacto
+    """
+    # ⚡ Verificar caché primero
+    if use_cache and table_id in _SCHEMA_CACHE:
+        return _SCHEMA_CACHE[table_id]
+    
+    # Si no está en caché, consultar BigQuery
+    client = get_bigquery_client()
+    
+    try:
+        bq_table = client.get_table(table_id)
+        
+        # ⚡ Formatear schema de forma ultra-compacta para Gemini
+        schema_parts = []
+        for field in bq_table.schema:
+            # Formato compacto: nombre:tipo (sin mode info extra)
+            schema_parts.append(f"{field.name}:{field.field_type}")
+        
+        # Unir todo en una sola línea separado por comas
+        schema_text = ", ".join(schema_parts)
+        
+        # ⚡ Guardar en caché
+        _SCHEMA_CACHE[table_id] = schema_text
+        
+        return schema_text
+        
+    except Exception as e:
+        raise Exception(f"Error obteniendo schema de {table_id}: {str(e)}")
 
 
 def get_table_schema(use_cache: bool = True) -> Tuple[str, str]:
@@ -44,39 +84,110 @@ def get_table_schema(use_cache: bool = True) -> Tuple[str, str]:
     
     table_id = f"{project_id}.{dataset}.{table}"
     
-    # ⚡ Verificar caché primero
-    if use_cache and table_id in _SCHEMA_CACHE:
-        log_info(f"✨ Schema obtenido desde caché (instantáneo)")
-        return _SCHEMA_CACHE[table_id], table_id
-    
-    # Si no está en caché o se fuerza recarga, consultar BigQuery
     start_time = time.time()
-    log_info(f"📋 Obteniendo schema de BigQuery (sin caché)...")
+    log_info(f"📋 Obteniendo schema de BigQuery...")
     
+    schema_text = _get_single_table_schema(table_id, use_cache)
+    
+    duration_ms = (time.time() - start_time) * 1000
+    log_info(f"Schema obtenido en {duration_ms/1000:.2f}s")
+    
+    return schema_text, table_id
+
+
+def get_dimensions_info(use_cache: bool = True) -> Dict[str, Any]:
+    """
+    Obtiene información de las tablas de dimensiones y sus relaciones
+    
+    Args:
+        use_cache: Si True, usa el caché (por defecto). Si False, fuerza recarga.
+    
+    Returns:
+        Dict con información de dimensiones:
+        {
+            "dimensions": {
+                "DimProducts": {"table_id": "...", "schema": "..."},
+                "DimProvince": {"table_id": "...", "schema": "..."},
+                "DimTime": {"table_id": "...", "schema": "..."}
+            },
+            "relationships": [
+                {"fact_column": "product_id", "dim_table": "DimProducts", "dim_column": "product_id"},
+                {"fact_column": "province_id", "dim_table": "DimProvince", "dim_column": "province_id"},
+                {"fact_column": "agreement_date", "dim_table": "DimTime", "dim_column": "date_id"}
+            ]
+        }
+    """
+    project_id = os.getenv("PROJECT_ID")
+    dataset = os.getenv("BQ_DATASET")
+    
+    if not all([project_id, dataset]):
+        raise ValueError("Faltan configurar variables: PROJECT_ID, BQ_DATASET")
+    
+    cache_key = f"{project_id}.{dataset}"
+    
+    # ⚡ Verificar caché primero
+    if use_cache and cache_key in _DIMENSIONS_CACHE:
+        log_info(f"✨ Dimensiones obtenidas desde caché (instantáneo)")
+        return _DIMENSIONS_CACHE[cache_key]
+    
+    start_time = time.time()
+    log_info(f"📋 Obteniendo schemas de tablas de dimensiones...")
+    
+    # Definir tablas de dimensiones (pueden ser configuradas por env vars en el futuro)
+    dim_tables = {
+        "DimProducts": os.getenv("BQ_DIM_PRODUCTS", "DimProducts"),
+        "DimProvince": os.getenv("BQ_DIM_PROVINCE", "DimProvince"),
+        "DimTime": os.getenv("BQ_DIM_TIME", "DimTime")
+    }
+    
+    dimensions = {}
     client = get_bigquery_client()
     
-    try:
-        bq_table = client.get_table(table_id)
-        
-        # ⚡ Formatear schema de forma ultra-compacta para Gemini
-        schema_parts = []
-        for field in bq_table.schema:
-            # Formato compacto: nombre:tipo (sin mode info extra)
-            schema_parts.append(f"{field.name}:{field.field_type}")
-        
-        # Unir todo en una sola línea separado por comas
-        schema_text = ", ".join(schema_parts)
-        
-        # ⚡ Guardar en caché
-        _SCHEMA_CACHE[table_id] = schema_text
-        
-        duration_ms = (time.time() - start_time) * 1000
-        log_info(f"Schema cargado y cacheado en {duration_ms/1000:.2f}s ({len(bq_table.schema)} columnas)")
-        
-        return schema_text, table_id
-        
-    except Exception as e:
-        raise Exception(f"Error obteniendo schema de {table_id}: {str(e)}")
+    for dim_name, dim_table in dim_tables.items():
+        table_id = f"{project_id}.{dataset}.{dim_table}"
+        try:
+            schema_text = _get_single_table_schema(table_id, use_cache)
+            dimensions[dim_name] = {
+                "table_id": table_id,
+                "table_name": dim_table,
+                "schema": schema_text
+            }
+            log_info(f"✅ Schema de {dim_name} obtenido")
+        except Exception as e:
+            log_warning(f"⚠️ No se pudo obtener schema de {dim_name} ({table_id}): {e}")
+            # Continuar con las otras dimensiones aunque una falle
+    
+    # Definir relaciones (hardcodeadas según la especificación)
+    relationships = [
+        {
+            "fact_column": "product_id",
+            "dim_table": "DimProducts",
+            "dim_column": "product_id"
+        },
+        {
+            "fact_column": "province_id",
+            "dim_table": "DimProvince",
+            "dim_column": "province_id"
+        },
+        {
+            "fact_column": "agreement_date",
+            "dim_table": "DimTime",
+            "dim_column": "date_id"
+        }
+    ]
+    
+    result = {
+        "dimensions": dimensions,
+        "relationships": relationships
+    }
+    
+    # ⚡ Guardar en caché
+    _DIMENSIONS_CACHE[cache_key] = result
+    
+    duration_ms = (time.time() - start_time) * 1000
+    log_info(f"Dimensiones cargadas en {duration_ms/1000:.2f}s ({len(dimensions)} tablas)")
+    
+    return result
 
 
 def execute_query(sql: str, max_rows: int = 100) -> Dict[str, Any]:

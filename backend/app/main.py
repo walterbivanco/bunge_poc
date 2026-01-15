@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 from app.models import AskRequest, AskResponse, ErrorResponse, HealthResponse
 from app.prompts import get_prompt
 from app.llm import init_vertex_ai, nl_to_sql, recommend_chart_type
-from app.db import get_table_schema, execute_query, test_connection
+from app.db import get_table_schema, get_dimensions_info, execute_query, test_connection
 from app.logger import metrics_collector, log_info, log_error, log_warning
 
 # Cargar variables de entorno
@@ -114,6 +114,19 @@ async def ask_question(request: AskRequest):
         steps.append({"name": "Get Schema", "duration_ms": step_duration})
         log_info(f"[{request_id}] Schema obtenido ({step_duration/1000:.2f}s)")
         
+        # 1.5. Obtener información de dimensiones (si está disponible)
+        dimensions_info = None
+        try:
+            step_start_dim = time.time()
+            log_info(f"[{request_id}] Obteniendo información de tablas de dimensiones...")
+            dimensions_info = get_dimensions_info()
+            step_duration_dim = (time.time() - step_start_dim) * 1000
+            if dimensions_info.get("dimensions"):
+                log_info(f"[{request_id}] {len(dimensions_info['dimensions'])} tablas de dimensiones cargadas ({step_duration_dim/1000:.2f}s)")
+        except Exception as e:
+            log_warning(f"[{request_id}] No se pudieron cargar dimensiones (continuando sin ellas): {e}")
+            dimensions_info = None
+        
         # 2. Construir prompt
         step_start = time.time()
         log_info(f"[{request_id}] Paso 2: Construyendo prompt")
@@ -123,7 +136,8 @@ async def ask_question(request: AskRequest):
             schema=schema_text,
             project_id=project_id,
             dataset=dataset,
-            table=table
+            table=table,
+            dimensions_info=dimensions_info
         )
         step_duration = (time.time() - step_start) * 1000
         steps.append({"name": "Build Prompt", "duration_ms": step_duration})
@@ -228,7 +242,7 @@ async def ask_question(request: AskRequest):
 @app.get("/schema")
 async def get_schema(refresh: bool = False):
     """
-    Endpoint para obtener el schema de la tabla configurada
+    Endpoint para obtener el schema de la tabla configurada y tablas de dimensiones
     
     Query params:
         - refresh: Si es True, fuerza recarga del schema (ignora caché)
@@ -237,10 +251,23 @@ async def get_schema(refresh: bool = False):
         schema_text, table_id = get_table_schema(use_cache=not refresh)
         cached_str = " (sin caché)" if refresh else " (caché)"
         log_info(f"Schema solicitado para tabla: {table_id}{cached_str}")
-        return {
+        
+        # Intentar obtener información de dimensiones
+        dimensions_info = None
+        try:
+            dimensions_info = get_dimensions_info(use_cache=not refresh)
+        except Exception as e:
+            log_warning(f"No se pudieron cargar dimensiones: {e}")
+        
+        result = {
             "table": table_id,
             "schema": schema_text
         }
+        
+        if dimensions_info:
+            result["dimensions"] = dimensions_info
+        
+        return result
     except Exception as e:
         log_error("Error obteniendo schema", e)
         raise HTTPException(status_code=500, detail=str(e))
