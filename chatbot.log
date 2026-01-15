@@ -1,0 +1,8 @@
+2026-01-15 12:56:14,422 - nl2sql_chatbot - INFO - ℹ️  Este es un mensaje de información
+2026-01-15 12:56:14,422 - nl2sql_chatbot - WARNING - ⚠️  Este es un mensaje de advertencia
+2026-01-15 12:56:14,422 - nl2sql_chatbot - ERROR - ❌ Este es un mensaje de error (simulado)
+2026-01-15 12:56:14,422 - nl2sql_chatbot - INFO - Log directo con logger.info()
+2026-01-15 12:58:20,539 - nl2sql_chatbot - INFO - ℹ️  Este es un mensaje de información
+2026-01-15 12:58:20,539 - nl2sql_chatbot - WARNING - ⚠️  Este es un mensaje de advertencia
+2026-01-15 12:58:20,539 - nl2sql_chatbot - ERROR - ❌ Este es un mensaje de error (simulado)
+2026-01-15 12:58:20,539 - nl2sql_chatbot - INFO - Log directo con logger.info()

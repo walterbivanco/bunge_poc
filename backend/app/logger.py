@@ -1,22 +1,67 @@
 """
 Módulo de logging centralizado con métricas
+Soporta logging local y Google Cloud Logging (si está habilitado)
 """
 import logging
 import time
+import os
 from datetime import datetime
 from typing import Dict, Any, Optional
 from functools import wraps
 import json
 
+# Intentar importar Google Cloud Logging (opcional)
+try:
+    import google.cloud.logging as cloud_logging
+    GCP_LOGGING_AVAILABLE = True
+except ImportError:
+    GCP_LOGGING_AVAILABLE = False
+    cloud_logging = None
+
+# Configurar handlers base
+handlers = [
+    logging.StreamHandler(),
+    logging.FileHandler('chatbot.log')
+]
+
+# Intentar configurar Google Cloud Logging si está disponible
+gcp_logging_enabled = False
+if GCP_LOGGING_AVAILABLE:
+    try:
+        project_id = os.getenv("PROJECT_ID")
+        if project_id:
+            # Inicializar cliente de Cloud Logging
+            client = cloud_logging.Client(project=project_id)
+            # Configurar logging estándar para redirigir a GCP
+            # Esto puede fallar si la API no está habilitada o no hay permisos
+            client.setup_logging()
+            gcp_logging_enabled = True
+            # Solo loguear si se configuró exitosamente (evitar spam en cada import)
+            import sys
+            if not hasattr(sys, '_gcp_logging_initialized'):
+                print("✅ Google Cloud Logging habilitado - Los logs se enviarán a GCP")
+                sys._gcp_logging_initialized = True
+    except Exception as e:
+        # Si falla (API no habilitada, permisos, etc.), continuar con logging local
+        # No mostrar warning en cada import, solo la primera vez
+        import sys
+        if not hasattr(sys, '_gcp_logging_failed'):
+            error_msg = str(e).lower()
+            # Solo mostrar warning si es un error de API no habilitada, no errores de importación
+            if "403" in error_msg or "not enabled" in error_msg or "permission" in error_msg:
+                print("⚠️  Google Cloud Logging no disponible (API no habilitada o sin permisos)")
+                print("   Continuando con logging local solamente")
+                print(f"   Error: {str(e)[:100]}...")
+                print("   Para habilitar: gcloud services enable logging.googleapis.com --project=<PROJECT_ID>")
+            # Para otros errores (conexión, etc.), ser más silencioso
+            sys._gcp_logging_failed = True
 
 # Configurar logger
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('chatbot.log')
-    ]
+    handlers=handlers,
+    force=True  # Forzar reconfiguración si ya estaba configurado
 )
 
 logger = logging.getLogger('nl2sql_chatbot')
