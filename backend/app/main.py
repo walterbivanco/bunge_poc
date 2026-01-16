@@ -28,6 +28,22 @@ try:
 except Exception as e:
     log_warning(f"No se pudo inicializar Vertex AI: {e}")
 
+# Verificar tablas de dimensiones al inicio (silenciosamente)
+try:
+    from app.db import get_dimensions_info
+    # Usar cache si está disponible para evitar logs verbosos
+    dimensions_info = get_dimensions_info(use_cache=True, force_refresh=False)
+    if dimensions_info.get("dimensions") and len(dimensions_info["dimensions"]) > 0:
+        dim_names = list(dimensions_info["dimensions"].keys())
+        log_info(f"✅ Tablas de dimensiones disponibles: {', '.join(dim_names)}")
+        log_info("✅ El sistema puede generar JOINs con estas tablas")
+    else:
+        # Solo mostrar warning si realmente no hay tablas (no si están en cache como "no encontradas")
+        log_info("ℹ️  Sin tablas de dimensiones - el sistema funcionará solo con la tabla principal")
+        log_info("   Para forzar recarga de dimensiones: POST /dimensions/refresh")
+except Exception as e:
+    log_warning(f"⚠️  Error verificando dimensiones al inicio: {e}")
+
 # Crear aplicación FastAPI
 app = FastAPI(
     title="NL to SQL Chatbot",
@@ -118,13 +134,20 @@ async def ask_question(request: AskRequest):
         dimensions_info = None
         try:
             step_start_dim = time.time()
-            log_info(f"[{request_id}] Obteniendo información de tablas de dimensiones...")
-            dimensions_info = get_dimensions_info()
+            # Intentar cargar dimensiones, forzando refresh si el cache tiene "no encontradas"
+            # Esto permite reintentar tablas que pueden haber sido creadas
+            dimensions_info = get_dimensions_info(force_refresh=False)
             step_duration_dim = (time.time() - step_start_dim) * 1000
-            if dimensions_info.get("dimensions"):
-                log_info(f"[{request_id}] {len(dimensions_info['dimensions'])} tablas de dimensiones cargadas ({step_duration_dim/1000:.2f}s)")
+            if dimensions_info.get("dimensions") and len(dimensions_info["dimensions"]) > 0:
+                log_info(f"[{request_id}] ✅ {len(dimensions_info['dimensions'])} tablas de dimensiones disponibles ({step_duration_dim/1000:.2f}s)")
+                log_info(f"[{request_id}] Tablas: {', '.join(dimensions_info['dimensions'].keys())}")
+            else:
+                # Solo mostrar warning la primera vez, después ser silencioso
+                if step_duration_dim > 0.1:  # Si tardó mucho, significa que intentó cargar
+                    log_info(f"[{request_id}] ℹ️  Sin tablas de dimensiones - usando solo tabla principal")
+                dimensions_info = None  # No pasar dimensiones vacías
         except Exception as e:
-            log_warning(f"[{request_id}] No se pudieron cargar dimensiones (continuando sin ellas): {e}")
+            log_warning(f"[{request_id}] Error cargando dimensiones: {e}")
             dimensions_info = None
         
         # 2. Construir prompt
@@ -142,6 +165,12 @@ async def ask_question(request: AskRequest):
         step_duration = (time.time() - step_start) * 1000
         steps.append({"name": "Build Prompt", "duration_ms": step_duration})
         log_info(f"[{request_id}] Prompt construido ({step_duration/1000:.3f}s, {len(prompt)} chars)")
+        # Log del prompt completo para debugging (solo si hay dimensiones)
+        if dimensions_info and dimensions_info.get("dimensions"):
+            log_info(f"[{request_id}] Prompt incluye {len(dimensions_info['dimensions'])} tablas de dimensiones")
+            # Mostrar preview del prompt (últimas 500 chars para ver las relaciones)
+            prompt_preview = prompt[-500:] if len(prompt) > 500 else prompt
+            log_info(f"[{request_id}] Preview del prompt (últimos 500 chars):\n{prompt_preview}")
         
         # 3. Generar SQL con Gemini
         log_info(f"[{request_id}] Paso 3: Generando SQL con Gemini")
@@ -237,6 +266,37 @@ async def ask_question(request: AskRequest):
             status_code=500,
             detail=f"Error procesando la pregunta: {str(e)}"
         )
+
+
+@app.post("/dimensions/refresh")
+async def refresh_dimensions():
+    """
+    Endpoint para forzar la recarga de tablas de dimensiones
+    Útil cuando se crean nuevas tablas de dimensiones o se corrigen problemas de permisos
+    """
+    try:
+        from app.db import clear_dimensions_cache
+        log_info("🔄 Forzando recarga de tablas de dimensiones...")
+        clear_dimensions_cache()
+        dimensions_info = get_dimensions_info(force_refresh=True)
+        
+        if dimensions_info.get("dimensions") and len(dimensions_info["dimensions"]) > 0:
+            return {
+                "success": True,
+                "message": f"Dimensiones recargadas: {len(dimensions_info['dimensions'])} tablas disponibles",
+                "tables": list(dimensions_info["dimensions"].keys()),
+                "dimensions": dimensions_info
+            }
+        else:
+            return {
+                "success": False,
+                "message": "No se encontraron tablas de dimensiones",
+                "tables": [],
+                "dimensions": dimensions_info
+            }
+    except Exception as e:
+        log_error("Error recargando dimensiones", e)
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/schema")

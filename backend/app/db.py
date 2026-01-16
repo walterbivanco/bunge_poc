@@ -10,6 +10,7 @@ from app.logger import log_info, log_error, log_warning
 # ⚡ Caché del schema para evitar consultas repetidas a BigQuery
 _SCHEMA_CACHE: Dict[str, str] = {}
 _DIMENSIONS_CACHE: Dict[str, Dict[str, str]] = {}
+_DIMENSIONS_NOT_FOUND_CACHE: set = set()  # Cachear tablas que no existen para no intentar cargarlas repetidamente
 
 
 def get_bigquery_client() -> bigquery.Client:
@@ -95,12 +96,13 @@ def get_table_schema(use_cache: bool = True) -> Tuple[str, str]:
     return schema_text, table_id
 
 
-def get_dimensions_info(use_cache: bool = True) -> Dict[str, Any]:
+def get_dimensions_info(use_cache: bool = True, force_refresh: bool = False) -> Dict[str, Any]:
     """
     Obtiene información de las tablas de dimensiones y sus relaciones
     
     Args:
         use_cache: Si True, usa el caché (por defecto). Si False, fuerza recarga.
+        force_refresh: Si True, fuerza recarga ignorando cache de "no encontradas"
     
     Returns:
         Dict con información de dimensiones:
@@ -118,17 +120,32 @@ def get_dimensions_info(use_cache: bool = True) -> Dict[str, Any]:
         }
     """
     project_id = os.getenv("PROJECT_ID")
-    dataset = os.getenv("BQ_DATASET")
+    # Dataset de dimensiones puede ser diferente al dataset de la fact table
+    dim_dataset = os.getenv("BQ_DIM_DATASET", "Dim")  # Por defecto "Dim"
+    fact_dataset = os.getenv("BQ_DATASET")  # Dataset de la fact table
     
-    if not all([project_id, dataset]):
+    if not all([project_id, fact_dataset]):
         raise ValueError("Faltan configurar variables: PROJECT_ID, BQ_DATASET")
     
-    cache_key = f"{project_id}.{dataset}"
+    cache_key = f"{project_id}.{dim_dataset}"
+    
+    # Si se fuerza refresh, limpiar cache de "no encontradas" para este dataset
+    if force_refresh:
+        # Limpiar cache de tablas no encontradas para este dataset
+        tables_to_remove = [t for t in _DIMENSIONS_NOT_FOUND_CACHE if f"{project_id}.{dataset}" in t]
+        for t in tables_to_remove:
+            _DIMENSIONS_NOT_FOUND_CACHE.discard(t)
+        # Limpiar cache de dimensiones también
+        if cache_key in _DIMENSIONS_CACHE:
+            del _DIMENSIONS_CACHE[cache_key]
     
     # ⚡ Verificar caché primero
-    if use_cache and cache_key in _DIMENSIONS_CACHE:
-        log_info(f"✨ Dimensiones obtenidas desde caché (instantáneo)")
-        return _DIMENSIONS_CACHE[cache_key]
+    if use_cache and cache_key in _DIMENSIONS_CACHE and not force_refresh:
+        cached_result = _DIMENSIONS_CACHE[cache_key]
+        # Solo loguear si hay dimensiones disponibles, si no hay, ser silencioso
+        if cached_result.get("dimensions") and len(cached_result["dimensions"]) > 0:
+            log_info(f"✨ Dimensiones obtenidas desde caché ({len(cached_result['dimensions'])} tablas)")
+        return cached_result
     
     start_time = time.time()
     log_info(f"📋 Obteniendo schemas de tablas de dimensiones...")
@@ -144,7 +161,13 @@ def get_dimensions_info(use_cache: bool = True) -> Dict[str, Any]:
     client = get_bigquery_client()
     
     for dim_name, dim_table in dim_tables.items():
-        table_id = f"{project_id}.{dataset}.{dim_table}"
+        # Las tablas de dimensiones están en el dataset "Dim", no en el dataset de la fact table
+        table_id = f"{project_id}.{dim_dataset}.{dim_table}"
+        
+        # Si ya sabemos que esta tabla no existe, saltarla silenciosamente
+        if table_id in _DIMENSIONS_NOT_FOUND_CACHE:
+            continue
+        
         try:
             schema_text = _get_single_table_schema(table_id, use_cache)
             dimensions[dim_name] = {
@@ -154,7 +177,35 @@ def get_dimensions_info(use_cache: bool = True) -> Dict[str, Any]:
             }
             log_info(f"✅ Schema de {dim_name} obtenido")
         except Exception as e:
-            log_warning(f"⚠️ No se pudo obtener schema de {dim_name} ({table_id}): {e}")
+            from google.api_core import exceptions as gcp_exceptions
+            
+            error_str = str(e)
+            error_type = type(e).__name__
+            
+            # Detectar tipo específico de error
+            if isinstance(e, gcp_exceptions.NotFound) or "404" in error_str or "Not found" in error_str or "notFound" in error_str:
+                # Tabla no encontrada
+                if table_id not in _DIMENSIONS_NOT_FOUND_CACHE:
+                    _DIMENSIONS_NOT_FOUND_CACHE.add(table_id)
+                    log_warning(f"⚠️ Tabla de dimensión {dim_name} no encontrada")
+                    log_warning(f"   ID buscado: {table_id}")
+                    log_warning(f"   Verifica:")
+                    log_warning(f"     1. Que la tabla exista en BigQuery Console")
+                    log_warning(f"     2. Que el nombre sea exacto: '{dim_table}'")
+                    log_warning(f"     3. Que esté en el dataset: {dataset}")
+                    log_warning(f"     4. Ejecuta: python backend/check_dimensions.py para diagnóstico")
+                if force_refresh:
+                    _DIMENSIONS_NOT_FOUND_CACHE.discard(table_id)
+            elif isinstance(e, gcp_exceptions.PermissionDenied) or "403" in error_str or "Permission" in error_str:
+                # Error de permisos
+                log_warning(f"⚠️ Permisos insuficientes para {dim_name} ({table_id})")
+                log_warning(f"   Verifica que tengas permisos de lectura en BigQuery")
+                log_warning(f"   Error: {error_str[:100]}")
+            else:
+                # Otro tipo de error
+                log_warning(f"⚠️ Error obteniendo schema de {dim_name} ({table_id})")
+                log_warning(f"   Tipo: {error_type}")
+                log_warning(f"   Error: {error_str[:150]}")
             # Continuar con las otras dimensiones aunque una falle
     
     # Definir relaciones (hardcodeadas según la especificación)
@@ -185,9 +236,21 @@ def get_dimensions_info(use_cache: bool = True) -> Dict[str, Any]:
     _DIMENSIONS_CACHE[cache_key] = result
     
     duration_ms = (time.time() - start_time) * 1000
-    log_info(f"Dimensiones cargadas en {duration_ms/1000:.2f}s ({len(dimensions)} tablas)")
+    
+    # Solo loguear si hay dimensiones, si no hay, ser más silencioso
+    if len(dimensions) > 0:
+        log_info(f"Dimensiones cargadas en {duration_ms/1000:.2f}s ({len(dimensions)} tablas)")
+    # Si no hay dimensiones, no loguear nada (ya se mostraron warnings individuales)
     
     return result
+
+
+def clear_dimensions_cache():
+    """Limpia el cache de dimensiones - útil para forzar recarga"""
+    global _DIMENSIONS_CACHE, _DIMENSIONS_NOT_FOUND_CACHE
+    _DIMENSIONS_CACHE.clear()
+    _DIMENSIONS_NOT_FOUND_CACHE.clear()
+    log_info("🧹 Cache de dimensiones limpiado")
 
 
 def execute_query(sql: str, max_rows: int = 100) -> Dict[str, Any]:

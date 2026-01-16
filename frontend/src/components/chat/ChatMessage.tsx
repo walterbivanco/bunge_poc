@@ -136,13 +136,17 @@ export const ChatMessage = ({
             {/* SQL Query */}
             {sql && (
               <div className="mt-3">
-                <details className="group">
-                  <summary className="text-xs font-mono text-muted-foreground cursor-pointer hover:text-foreground">
+                <details className="group" open>
+                  <summary className="text-xs font-mono text-muted-foreground cursor-pointer hover:text-foreground select-none">
                     View generated SQL
                   </summary>
-                  <pre className="mt-2 p-3 bg-background rounded-lg border border-border text-xs font-mono overflow-x-auto">
-                    {sql}
-                  </pre>
+                  <div className="mt-2 bg-background rounded-lg border border-border">
+                    <div className="p-3 max-h-96 overflow-auto">
+                      <code className="text-xs font-mono whitespace-pre-wrap break-words block leading-relaxed">
+                        {sql}
+                      </code>
+                    </div>
+                  </div>
                 </details>
               </div>
             )}
