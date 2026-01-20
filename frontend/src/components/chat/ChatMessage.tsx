@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, formatColumnName } from "@/lib/utils";
 import { Bot, User } from "lucide-react";
 import { DataChart } from "./DataChart";
 import { ChartData } from "@/lib/chartUtils";
@@ -86,7 +86,7 @@ export const ChatMessage = ({
         }),
         xKey: chartType === "pie" ? "name" : xKey,
         yKey: chartType === "pie" ? "value" : yKey,
-        label: chartType === "pie" ? "Count" : yKey,
+        label: chartType === "pie" ? "Count" : formatColumnName(yKey),
       };
     }
   }
@@ -163,14 +163,21 @@ export const ChatMessage = ({
                   <table className="w-full text-xs">
                     <thead className="bg-muted/50">
                       <tr>
-                        {columns.map((col, idx) => (
-                          <th
-                            key={idx}
-                            className="px-3 py-2 text-left font-semibold text-foreground border-b border-border"
-                          >
-                            {col}
-                          </th>
-                        ))}
+                        {columns.map((col, idx) => {
+                          const formatted = formatColumnName(col);
+                          // Debug: verificar que se está formateando
+                          if (col !== formatted) {
+                            console.log(`[ChatMessage] Formateando columna: "${col}" -> "${formatted}"`);
+                          }
+                          return (
+                            <th
+                              key={idx}
+                              className="px-3 py-2 text-left font-semibold text-foreground border-b border-border"
+                            >
+                              {formatted}
+                            </th>
+                          );
+                        })}
                       </tr>
                     </thead>
                     <tbody>

@@ -1,7 +1,7 @@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
 import { ChartData } from "@/lib/chartUtils";
-import { cn } from "@/lib/utils";
+import { cn, formatColumnName } from "@/lib/utils";
 
 interface DataChartProps {
   chartData: ChartData;
@@ -23,7 +23,12 @@ export const DataChart = ({ chartData, className }: DataChartProps) => {
 
   const chartConfig: Record<string, { label: string; color?: string }> = {
     [chartData.yKey]: {
-      label: chartData.label || chartData.yKey,
+      label: chartData.label ? formatColumnName(chartData.label) : formatColumnName(chartData.yKey),
+      color: COLORS[0],
+    },
+    // Agregar también el xKey para formatear nombres dinámicos
+    [chartData.xKey]: {
+      label: formatColumnName(chartData.xKey),
       color: COLORS[0],
     },
   };
@@ -40,9 +45,22 @@ export const DataChart = ({ chartData, className }: DataChartProps) => {
               angle={chartData.data.length > 5 ? -45 : 0}
               textAnchor={chartData.data.length > 5 ? "end" : "middle"}
               height={chartData.data.length > 5 ? 80 : 40}
+              label={{ value: formatColumnName(chartData.xKey), position: "insideBottom", offset: -5, style: { textAnchor: "middle", fontSize: 12 } }}
             />
-            <YAxis tick={{ fontSize: 11 }} />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <YAxis 
+              tick={{ fontSize: 11 }}
+              label={{ value: formatColumnName(chartData.yKey), angle: -90, position: "insideLeft", style: { textAnchor: "middle", fontSize: 12 } }}
+            />
+            <ChartTooltip 
+              content={
+                <ChartTooltipContent 
+                  formatter={(value, name) => [
+                    typeof value === 'number' ? value.toLocaleString() : value,
+                    formatColumnName(String(name || chartData.yKey))
+                  ]}
+                />
+              } 
+            />
             <Bar dataKey={chartData.yKey} fill={COLORS[0]} radius={[4, 4, 0, 0]} />
           </BarChart>
         );
@@ -57,9 +75,22 @@ export const DataChart = ({ chartData, className }: DataChartProps) => {
               angle={chartData.data.length > 5 ? -45 : 0}
               textAnchor={chartData.data.length > 5 ? "end" : "middle"}
               height={chartData.data.length > 5 ? 80 : 40}
+              label={{ value: formatColumnName(chartData.xKey), position: "insideBottom", offset: -5, style: { textAnchor: "middle", fontSize: 12 } }}
             />
-            <YAxis tick={{ fontSize: 11 }} />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <YAxis 
+              tick={{ fontSize: 11 }}
+              label={{ value: formatColumnName(chartData.yKey), angle: -90, position: "insideLeft", style: { textAnchor: "middle", fontSize: 12 } }}
+            />
+            <ChartTooltip 
+              content={
+                <ChartTooltipContent 
+                  formatter={(value, name) => [
+                    typeof value === 'number' ? value.toLocaleString() : value,
+                    formatColumnName(String(name || chartData.yKey))
+                  ]}
+                />
+              } 
+            />
             <Line
               type="monotone"
               dataKey={chartData.yKey}
@@ -81,9 +112,22 @@ export const DataChart = ({ chartData, className }: DataChartProps) => {
               angle={-45}
               textAnchor="end"
               height={80}
+              label={{ value: formatColumnName(chartData.xKey), position: "insideBottom", offset: -5, style: { textAnchor: "middle", fontSize: 12 } }}
             />
-            <YAxis tick={{ fontSize: 12 }} />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <YAxis 
+              tick={{ fontSize: 12 }}
+              label={{ value: formatColumnName(chartData.yKey), angle: -90, position: "insideLeft", style: { textAnchor: "middle", fontSize: 12 } }}
+            />
+            <ChartTooltip 
+              content={
+                <ChartTooltipContent 
+                  formatter={(value, name) => [
+                    typeof value === 'number' ? value.toLocaleString() : value,
+                    formatColumnName(String(name || chartData.yKey))
+                  ]}
+                />
+              } 
+            />
             <Area
               type="monotone"
               dataKey={chartData.yKey}
@@ -111,7 +155,16 @@ export const DataChart = ({ chartData, className }: DataChartProps) => {
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartTooltip 
+              content={
+                <ChartTooltipContent 
+                  formatter={(value, name) => [
+                    typeof value === 'number' ? value.toLocaleString() : value,
+                    formatColumnName(String(name || chartData.yKey))
+                  ]}
+                />
+              } 
+            />
           </PieChart>
         );
 

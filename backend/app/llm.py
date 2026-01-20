@@ -78,6 +78,9 @@ def nl_to_sql(prompt: str, model_name: Optional[str] = None, max_retries: int = 
             # Extraer solo el SQL de la respuesta
             sql = extract_sql_from_response(response.text)
             
+            # Validar y corregir el nombre de la tabla si es necesario
+            sql = validate_and_fix_table_name(sql, prompt)
+            
             duration_ms = (time.time() - start_time) * 1000
             
             # Intentar extraer metadata de uso (si está disponible)
@@ -272,4 +275,72 @@ def extract_sql_from_response(response_text: str) -> str:
         raise ValueError("El modelo no generó una consulta SELECT válida")
     
     return sql.strip()
+
+
+def validate_and_fix_table_name(sql: str, prompt: str) -> str:
+    """
+    Valida y corrige el nombre de la tabla en el SQL generado.
+    Extrae el nombre correcto del prompt y lo reemplaza si es necesario.
+    
+    Args:
+        sql: SQL generado por el LLM
+        prompt: Prompt original que contiene el nombre correcto de la tabla
+        
+    Returns:
+        SQL con el nombre de tabla corregido si era necesario
+    """
+    import os
+    import re
+    
+    # Extraer el nombre correcto de la tabla del prompt
+    # Buscar el patrón: TABLA PRINCIPAL (FACT TABLE): `project.dataset.table`
+    table_match = re.search(r'TABLA PRINCIPAL.*?: `([^`]+)`', prompt)
+    if not table_match:
+        # Fallback: construir desde variables de entorno
+        project_id = os.getenv("PROJECT_ID")
+        dataset = os.getenv("BQ_DATASET")
+        table = os.getenv("BQ_TABLE")
+        if all([project_id, dataset, table]):
+            correct_table = f"{project_id}.{dataset}.{table}"
+        else:
+            log_warning("⚠️ No se pudo extraer el nombre correcto de la tabla del prompt")
+            return sql
+    else:
+        correct_table = table_match.group(1)
+    
+    # Buscar cualquier referencia a la tabla en el SQL
+    # Patrón: `project.dataset.table` o project.dataset.table (con o sin backticks)
+    # Buscar variaciones comunes del nombre de tabla
+    table_patterns = [
+        # Con backticks completos
+        r'`([^`]+\.(?:Gold|Dim)\.[^`]+)`',
+        # Sin backticks
+        r'([a-zA-Z0-9\-]+\.[a-zA-Z0-9\-]+\.[a-zA-Z0-9_\-]+)',
+    ]
+    
+    corrected_sql = sql
+    for pattern in table_patterns:
+        matches = re.finditer(pattern, sql, re.IGNORECASE)
+        for match in matches:
+            found_table = match.group(1)
+            # Si el nombre encontrado no coincide exactamente con el correcto
+            if found_table.lower() != correct_table.lower():
+                # Verificar si es una variación del nombre correcto (ej: contracts_gold vs contracts_gold_2)
+                correct_parts = correct_table.split('.')
+                found_parts = found_table.split('.')
+                
+                # Si el proyecto y dataset coinciden pero la tabla no
+                if len(correct_parts) == 3 and len(found_parts) == 3:
+                    if correct_parts[0].lower() == found_parts[0].lower() and \
+                       correct_parts[1].lower() == found_parts[1].lower() and \
+                       correct_parts[2].lower() != found_parts[2].lower():
+                        # Reemplazar el nombre incorrecto con el correcto
+                        if match.group(0).startswith('`'):
+                            replacement = f"`{correct_table}`"
+                        else:
+                            replacement = correct_table
+                        corrected_sql = corrected_sql.replace(match.group(0), replacement)
+                        log_warning(f"⚠️ Corregido nombre de tabla en SQL: '{found_table}' → '{correct_table}'")
+    
+    return corrected_sql
 

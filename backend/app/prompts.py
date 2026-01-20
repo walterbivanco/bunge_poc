@@ -7,12 +7,14 @@ import os
 BASE_PROMPT = """Convierte esta pregunta a SQL de BigQuery. Responde SOLO con el SQL, sin explicaciones.
 
 TABLA PRINCIPAL (FACT TABLE): `{project_id}.{dataset}.{table}`
+⚠️ CRÍTICO: DEBES usar EXACTAMENTE este nombre de tabla: `{project_id}.{dataset}.{table}` - NO lo modifiques, NO lo cambies, úsalo tal cual está escrito aquí.
 
 COLUMNAS DE LA TABLA PRINCIPAL:
 {schema}
 {dimensions_info}
 REGLAS CRÍTICAS:
 - Solo SELECT (nunca INSERT/UPDATE/DELETE)
+- ⚠️ USA EXACTAMENTE el nombre de tabla: `{project_id}.{dataset}.{table}` - NO inventes nombres, NO uses variaciones
 {dimension_rules}
 - Usa solo columnas de los schemas proporcionados
 - Agrega LIMIT 100
