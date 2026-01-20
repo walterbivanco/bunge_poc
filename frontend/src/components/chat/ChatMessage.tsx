@@ -1,4 +1,4 @@
-import { cn, formatColumnName } from "@/lib/utils";
+import { cn, formatColumnName, formatNumber } from "@/lib/utils";
 import { Bot, User } from "lucide-react";
 import { DataChart } from "./DataChart";
 import { ChartData } from "@/lib/chartUtils";
@@ -191,9 +191,7 @@ export const ChatMessage = ({
                               key={cellIdx}
                               className="px-3 py-2 text-foreground"
                             >
-                              {cell !== null && cell !== undefined
-                                ? String(cell)
-                                : "—"}
+                              {formatNumber(cell)}
                             </td>
                           ))}
                         </tr>

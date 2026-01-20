@@ -46,3 +46,31 @@ export function formatColumnName(columnName: string): string {
   
   return formatted;
 }
+
+/**
+ * Formatea números con separadores de miles y decimales
+ * Ejemplos:
+ * - 1234.56 -> "1,234.56"
+ * - 1234567.89 -> "1,234,567.89"
+ * - 1000 -> "1,000"
+ */
+export function formatNumber(value: any): string {
+  if (value === null || value === undefined) {
+    return "—";
+  }
+  
+  // Intentar convertir a número
+  const num = typeof value === 'number' ? value : parseFloat(String(value));
+  
+  // Si no es un número válido, retornar el valor original como string
+  if (isNaN(num)) {
+    return String(value);
+  }
+  
+  // Formatear con separadores de miles y decimales
+  // Usar configuración en-US: punto para decimales, coma para miles
+  return num.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 10, // Permitir hasta 10 decimales
+  });
+}
