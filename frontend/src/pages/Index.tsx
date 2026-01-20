@@ -74,13 +74,27 @@ const Index = () => {
     setIsTyping(true);
 
     try {
+      // Preparar historial de conversación (últimas 3-5 interacciones)
+      // Solo incluir mensajes que tengan SQL (respuestas del asistente) para contexto
+      const conversationHistory = messages
+        .slice(-6) // Últimas 6 mensajes (3 interacciones user-assistant)
+        .map((msg) => ({
+          role: msg.role,
+          content: msg.content,
+          sql: msg.role === "assistant" ? msg.sql : undefined,
+        }))
+        .filter((msg) => msg.role === "user" || (msg.role === "assistant" && msg.sql)); // Solo incluir si tiene SQL
+      
       // Llamar al backend
       const response = await fetch("/ask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ question: content }),
+        body: JSON.stringify({ 
+          question: content,
+          conversation_history: conversationHistory.length > 0 ? conversationHistory : undefined
+        }),
       });
 
       if (!response.ok) {

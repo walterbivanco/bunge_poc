@@ -154,13 +154,28 @@ async def ask_question(request: AskRequest):
         step_start = time.time()
         log_info(f"[{request_id}] Paso 2: Construyendo prompt")
         
+        # Preparar historial de conversación si está disponible
+        conversation_history = None
+        if request.conversation_history:
+            # Convertir a formato simple para el prompt
+            conversation_history = [
+                {
+                    "role": msg.role,
+                    "content": msg.content,
+                    "sql": msg.sql
+                }
+                for msg in request.conversation_history
+            ]
+            log_info(f"[{request_id}] Incluyendo {len(conversation_history)} mensajes anteriores en el contexto")
+        
         prompt = get_prompt(
             question=request.question,
             schema=schema_text,
             project_id=project_id,
             dataset=dataset,
             table=table,
-            dimensions_info=dimensions_info
+            dimensions_info=dimensions_info,
+            conversation_history=conversation_history
         )
         step_duration = (time.time() - step_start) * 1000
         steps.append({"name": "Build Prompt", "duration_ms": step_duration})

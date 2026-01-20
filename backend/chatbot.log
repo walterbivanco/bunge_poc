@@ -5638,3 +5638,101 @@ SQL:
 2026-01-20 10:38:19,591 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.39s (3 tablas)
 2026-01-20 10:38:19,591 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
 2026-01-20 10:38:19,591 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-20 11:01:44,611 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-20 11:01:44,612 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-20 11:01:44,612 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-20 11:01:44,612 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-20 11:01:44,624 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:44,627 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:45,485 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-20 11:01:45,499 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:46,240 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-20 11:01:46,253 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:46,958 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-20 11:01:46,958 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.35s (3 tablas)
+2026-01-20 11:01:46,958 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-20 11:01:46,959 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-20 11:01:53,532 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-20 11:01:53,532 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-20 11:01:53,532 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-20 11:01:53,532 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-20 11:01:53,541 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:53,544 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:54,154 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-20 11:01:54,165 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:54,879 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-20 11:01:54,891 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:55,666 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-20 11:01:55,666 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.13s (3 tablas)
+2026-01-20 11:01:55,667 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-20 11:01:55,667 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-20 11:01:56,579 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-20 11:01:56,579 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-20 11:01:56,579 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-20 11:01:56,579 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-20 11:01:56,587 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:56,591 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:57,325 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-20 11:01:57,339 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:58,036 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-20 11:01:58,049 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:01:58,812 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-20 11:01:58,813 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.23s (3 tablas)
+2026-01-20 11:01:58,813 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-20 11:01:58,813 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-20 11:02:02,080 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-20 11:02:02,080 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-20 11:02:02,080 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-20 11:02:02,080 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-20 11:02:02,089 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:02,092 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:02,770 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-20 11:02:02,784 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:03,423 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-20 11:02:03,439 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:04,161 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-20 11:02:04,162 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.08s (3 tablas)
+2026-01-20 11:02:04,162 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-20 11:02:04,162 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-20 11:02:12,476 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-20 11:02:12,476 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-20 11:02:12,476 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-20 11:02:12,476 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-20 11:02:12,486 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:12,489 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:13,310 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-20 11:02:13,324 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:14,055 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-20 11:02:14,069 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:14,667 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-20 11:02:14,667 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.19s (3 tablas)
+2026-01-20 11:02:14,668 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-20 11:02:14,668 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-20 11:02:18,706 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-20 11:02:18,706 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-20 11:02:18,706 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-20 11:02:18,706 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-20 11:02:18,715 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:18,719 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:19,281 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-20 11:02:19,296 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:19,932 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-20 11:02:19,946 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:20,637 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-20 11:02:20,637 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 1.93s (3 tablas)
+2026-01-20 11:02:20,637 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-20 11:02:20,637 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-20 11:02:49,498 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-20 11:02:49,499 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-20 11:02:49,499 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-20 11:02:49,499 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-20 11:02:49,508 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:49,512 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:50,234 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-20 11:02:50,250 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:51,042 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-20 11:02:51,058 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-20 11:02:51,788 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-20 11:02:51,789 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.29s (3 tablas)
+2026-01-20 11:02:51,789 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-20 11:02:51,789 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas

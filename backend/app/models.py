@@ -5,6 +5,13 @@ from pydantic import BaseModel, Field
 from typing import List, Any, Optional, Dict
 
 
+class ConversationMessage(BaseModel):
+    """Mensaje de una conversación anterior"""
+    role: str = Field(..., description="Rol: 'user' o 'assistant'")
+    content: str = Field(..., description="Contenido del mensaje")
+    sql: Optional[str] = Field(None, description="SQL generado (solo para mensajes assistant)")
+
+
 class AskRequest(BaseModel):
     """Request para hacer una pregunta en lenguaje natural"""
     question: str = Field(
@@ -12,11 +19,26 @@ class AskRequest(BaseModel):
         min_length=1,
         description="Pregunta en lenguaje natural sobre los datos"
     )
+    conversation_history: Optional[List[ConversationMessage]] = Field(
+        None,
+        description="Historial de conversación anterior (últimas 3-5 interacciones) para contexto"
+    )
     
     class Config:
         json_schema_extra = {
             "example": {
-                "question": "¿Cuántos contratos hay por estado?"
+                "question": "¿Cuántos contratos hay por estado?",
+                "conversation_history": [
+                    {
+                        "role": "user",
+                        "content": "Show me contracts by province"
+                    },
+                    {
+                        "role": "assistant",
+                        "content": "Found 5 results",
+                        "sql": "SELECT province_name, COUNT(*) FROM ..."
+                    }
+                ]
             }
         }
 

@@ -19,8 +19,9 @@ REGLAS CRÍTICAS:
 - Usa solo columnas de los schemas proporcionados
 - Agrega LIMIT 100
 - Sin markdown ni explicaciones
+{conversation_context}
 
-PREGUNTA: {question}
+PREGUNTA ACTUAL: {question}
 
 SQL:"""
 
@@ -31,7 +32,8 @@ def get_prompt(
     project_id: str, 
     dataset: str, 
     table: str,
-    dimensions_info: dict = None
+    dimensions_info: dict = None,
+    conversation_history: list = None
 ) -> str:
     """
     Construye el prompt completo para enviar a Gemini
@@ -43,6 +45,7 @@ def get_prompt(
         dataset: Dataset de BigQuery
         table: Nombre de la tabla principal
         dimensions_info: Dict con información de tablas de dimensiones (opcional)
+        conversation_history: Lista de mensajes anteriores para contexto (opcional)
         
     Returns:
         Prompt formateado listo para enviar al LLM
@@ -85,6 +88,23 @@ def get_prompt(
         # Sin dimensiones disponibles
         dimension_rules = "- Usa solo las columnas de la tabla principal proporcionada"
     
+    # Construir contexto de conversación si hay historial
+    conversation_context = ""
+    if conversation_history and len(conversation_history) > 0:
+        # Limitar a las últimas 5 interacciones para no hacer el prompt muy largo
+        recent_history = conversation_history[-5:] if len(conversation_history) > 5 else conversation_history
+        conversation_context = "\n\n📋 CONTEXTO DE CONVERSACIÓN ANTERIOR (para referencias como 'the same', 'previous query', etc.):\n"
+        for msg in recent_history:
+            if msg.get("role") == "user":
+                conversation_context += f"Usuario: {msg.get('content', '')}\n"
+            elif msg.get("role") == "assistant":
+                sql = msg.get('sql', '')
+                if sql:
+                    conversation_context += f"Asistente: {msg.get('content', '')} (SQL: {sql[:100]}...)\n"
+                else:
+                    conversation_context += f"Asistente: {msg.get('content', '')}\n"
+        conversation_context += "\n💡 Si la pregunta actual hace referencia a algo anterior (ej: 'the same', 'that query', 'previous results'), usa el contexto de arriba para entender qué se refiere.\n"
+    
     return BASE_PROMPT.format(
         question=question,
         schema=schema,
@@ -92,6 +112,7 @@ def get_prompt(
         dataset=dataset,
         table=table,
         dimensions_info=dim_text,
-        dimension_rules=dimension_rules
+        dimension_rules=dimension_rules,
+        conversation_context=conversation_context
     )
 
