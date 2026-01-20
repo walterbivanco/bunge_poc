@@ -23,6 +23,10 @@ export interface Message {
   } | null;
 }
 
+// Límites de memoria para el frontend
+const MAX_CONVERSATIONS = 50; // Máximo 50 conversaciones en memoria
+const MAX_MESSAGES_PER_CONVERSATION = 100; // Máximo 100 mensajes por conversación
+
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -36,7 +40,14 @@ const Index = () => {
       title: "New conversation",
       createdAt: new Date(),
     };
-    setConversations((prev) => [newConversation, ...prev]);
+    setConversations((prev) => {
+      // Limitar número de conversaciones (mantener las más recientes)
+      const updated = [newConversation, ...prev];
+      if (updated.length > MAX_CONVERSATIONS) {
+        return updated.slice(0, MAX_CONVERSATIONS);
+      }
+      return updated;
+    });
     setActiveConversationId(newConversation.id);
     setMessages([]);
   };
@@ -99,7 +110,15 @@ const Index = () => {
         chartConfig: data.chart_config || null,
       };
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages((prev) => {
+        // Limitar número de mensajes por conversación (mantener los más recientes)
+        const updated = [...prev, assistantMessage];
+        if (updated.length > MAX_MESSAGES_PER_CONVERSATION) {
+          // Mantener solo los últimos MAX_MESSAGES_PER_CONVERSATION mensajes
+          return updated.slice(-MAX_MESSAGES_PER_CONVERSATION);
+        }
+        return updated;
+      });
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),

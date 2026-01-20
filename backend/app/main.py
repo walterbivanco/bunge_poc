@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 from app.models import AskRequest, AskResponse, ErrorResponse, HealthResponse
 from app.prompts import get_prompt
 from app.llm import init_vertex_ai, nl_to_sql, recommend_chart_type
-from app.db import get_table_schema, get_dimensions_info, execute_query, test_connection
+from app.db import get_table_schema, get_dimensions_info, execute_query, test_connection, clear_all_caches, get_cache_stats
 from app.logger import metrics_collector, log_info, log_error, log_warning
 
 # Cargar variables de entorno
@@ -376,6 +376,62 @@ async def get_logs(lines: int = 50):
         }
     except Exception as e:
         log_error("Error obteniendo logs", e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/cache/clear")
+async def clear_cache(clear_metrics: bool = False):
+    """
+    Endpoint para limpiar todos los cachés y liberar memoria
+    
+    Query params:
+        - clear_metrics: Si es True, también limpia las métricas almacenadas
+    """
+    log_info("🧹 Solicitud de limpieza de cachés")
+    try:
+        clear_all_caches()
+        cache_stats = get_cache_stats()
+        
+        metrics_cleared = False
+        if clear_metrics:
+            metrics_collector.clear_metrics()
+            metrics_cleared = True
+            log_info("🧹 Métricas también limpiadas")
+        
+        metrics_stats = {
+            "total_metrics": len(metrics_collector.metrics),
+            "max_metrics": metrics_collector.MAX_METRICS,
+            "cleared": metrics_cleared
+        }
+        
+        return {
+            "status": "success",
+            "message": "Todos los cachés han sido limpiados" + (" (incluyendo métricas)" if metrics_cleared else ""),
+            "cache_stats": cache_stats,
+            "metrics_stats": metrics_stats
+        }
+    except Exception as e:
+        log_error("Error limpiando cachés", e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/cache/stats")
+async def get_cache_statistics():
+    """
+    Endpoint para obtener estadísticas de los cachés (monitoreo de memoria)
+    """
+    try:
+        cache_stats = get_cache_stats()
+        metrics_stats = {
+            "total_metrics": len(metrics_collector.metrics),
+            "max_metrics": metrics_collector.MAX_METRICS
+        }
+        return {
+            "cache_stats": cache_stats,
+            "metrics_stats": metrics_stats
+        }
+    except Exception as e:
+        log_error("Error obteniendo estadísticas de caché", e)
         raise HTTPException(status_code=500, detail=str(e))
 
 

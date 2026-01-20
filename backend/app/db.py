@@ -8,9 +8,12 @@ from typing import Dict, List, Any, Tuple
 from app.logger import log_info, log_error, log_warning
 
 # ⚡ Caché del schema para evitar consultas repetidas a BigQuery
+# Límites de memoria: máximo 50 schemas en caché
+_MAX_SCHEMA_CACHE_SIZE = 50
 _SCHEMA_CACHE: Dict[str, str] = {}
 _DIMENSIONS_CACHE: Dict[str, Dict[str, str]] = {}
 _DIMENSIONS_NOT_FOUND_CACHE: set = set()  # Cachear tablas que no existen para no intentar cargarlas repetidamente
+_MAX_DIMENSIONS_NOT_FOUND_CACHE_SIZE = 100  # Máximo 100 tablas "no encontradas" en caché
 
 
 def get_bigquery_client() -> bigquery.Client:
@@ -57,7 +60,14 @@ def _get_single_table_schema(table_id: str, use_cache: bool = True) -> str:
         # Unir todo en una sola línea separado por comas
         schema_text = ", ".join(schema_parts)
         
-        # ⚡ Guardar en caché
+        # ⚡ Guardar en caché con límite de memoria
+        # Si el caché está lleno, eliminar el más antiguo (FIFO)
+        if len(_SCHEMA_CACHE) >= _MAX_SCHEMA_CACHE_SIZE:
+            # Eliminar el primer elemento (más antiguo)
+            oldest_key = next(iter(_SCHEMA_CACHE))
+            del _SCHEMA_CACHE[oldest_key]
+            log_info(f"🧹 Cache de schemas lleno, eliminado: {oldest_key}")
+        
         _SCHEMA_CACHE[table_id] = schema_text
         
         return schema_text
@@ -186,6 +196,12 @@ def get_dimensions_info(use_cache: bool = True, force_refresh: bool = False) -> 
             if isinstance(e, gcp_exceptions.NotFound) or "404" in error_str or "Not found" in error_str or "notFound" in error_str:
                 # Tabla no encontrada
                 if table_id not in _DIMENSIONS_NOT_FOUND_CACHE:
+                    # Limpiar caché si está lleno (FIFO)
+                    if len(_DIMENSIONS_NOT_FOUND_CACHE) >= _MAX_DIMENSIONS_NOT_FOUND_CACHE_SIZE:
+                        # Eliminar el primer elemento
+                        oldest = next(iter(_DIMENSIONS_NOT_FOUND_CACHE))
+                        _DIMENSIONS_NOT_FOUND_CACHE.discard(oldest)
+                    
                     _DIMENSIONS_NOT_FOUND_CACHE.add(table_id)
                     log_warning(f"⚠️ Tabla de dimensión {dim_name} no encontrada")
                     log_warning(f"   ID buscado: {table_id}")
@@ -251,6 +267,31 @@ def clear_dimensions_cache():
     _DIMENSIONS_CACHE.clear()
     _DIMENSIONS_NOT_FOUND_CACHE.clear()
     log_info("🧹 Cache de dimensiones limpiado")
+
+
+def clear_all_caches():
+    """Limpia todos los cachés para liberar memoria"""
+    global _SCHEMA_CACHE, _DIMENSIONS_CACHE, _DIMENSIONS_NOT_FOUND_CACHE
+    schema_count = len(_SCHEMA_CACHE)
+    dim_count = len(_DIMENSIONS_CACHE)
+    not_found_count = len(_DIMENSIONS_NOT_FOUND_CACHE)
+    
+    _SCHEMA_CACHE.clear()
+    _DIMENSIONS_CACHE.clear()
+    _DIMENSIONS_NOT_FOUND_CACHE.clear()
+    
+    log_info(f"🧹 Todos los cachés limpiados: {schema_count} schemas, {dim_count} dimensiones, {not_found_count} 'no encontradas'")
+
+
+def get_cache_stats() -> Dict[str, Any]:
+    """Obtiene estadísticas de los cachés para monitoreo de memoria"""
+    return {
+        "schema_cache_size": len(_SCHEMA_CACHE),
+        "schema_cache_max": _MAX_SCHEMA_CACHE_SIZE,
+        "dimensions_cache_size": len(_DIMENSIONS_CACHE),
+        "dimensions_not_found_cache_size": len(_DIMENSIONS_NOT_FOUND_CACHE),
+        "dimensions_not_found_cache_max": _MAX_DIMENSIONS_NOT_FOUND_CACHE_SIZE
+    }
 
 
 def execute_query(sql: str, max_rows: int = 100) -> Dict[str, Any]:

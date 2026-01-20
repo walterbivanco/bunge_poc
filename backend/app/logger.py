@@ -70,6 +70,9 @@ logger = logging.getLogger('nl2sql_chatbot')
 class MetricsCollector:
     """Colector de métricas para requests"""
     
+    # Límite de memoria: máximo 1000 métricas en memoria
+    MAX_METRICS = 1000
+    
     def __init__(self):
         self.metrics = []
     
@@ -88,6 +91,12 @@ class MetricsCollector:
             "success": request_data.get("success", True),
             "error": request_data.get("error")
         }
+        
+        # Limitar tamaño de métricas en memoria (FIFO)
+        if len(self.metrics) >= self.MAX_METRICS:
+            # Eliminar las métricas más antiguas (primeras 100)
+            self.metrics = self.metrics[100:]
+            logger.debug(f"🧹 Limpieza de memoria: eliminadas 100 métricas antiguas")
         
         self.metrics.append(metric)
         
@@ -126,6 +135,20 @@ class MetricsCollector:
     def get_recent_metrics(self, limit: int = 10) -> list:
         """Obtiene las últimas N métricas"""
         return self.metrics[-limit:]
+    
+    def clear_metrics(self, keep_recent: int = 0):
+        """Limpia las métricas almacenadas
+        
+        Args:
+            keep_recent: Número de métricas recientes a mantener (0 = limpiar todas)
+        """
+        if keep_recent > 0 and len(self.metrics) > keep_recent:
+            self.metrics = self.metrics[-keep_recent:]
+            logger.info(f"🧹 Limpieza de métricas: mantenidas {keep_recent} más recientes")
+        else:
+            count = len(self.metrics)
+            self.metrics.clear()
+            logger.info(f"🧹 Limpieza de métricas: eliminadas {count} métricas")
     
     def get_stats(self) -> Dict[str, Any]:
         """Obtiene estadísticas generales"""
