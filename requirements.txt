@@ -2,7 +2,8 @@
 
 # Google Cloud - Vertex AI (Gemini)
 # Usado para: Conversión NL→SQL y recomendación de tipos de gráficos
-google-cloud-aiplatform==1.71.1
+# Nota: Actualizado para compatibilidad con langchain-google-vertexai>=3.2.1
+google-cloud-aiplatform>=1.97.0,<2.0.0
 
 # Google Cloud - BigQuery
 # Usado para: Ejecución de consultas SQL y acceso a datos
@@ -33,3 +34,10 @@ pydantic-settings==2.6.1
 python-dotenv==1.0.1
 python-multipart==0.0.17
 
+# LangGraph y LangChain
+# LangGraph: Framework para construir agentes con grafos de estado
+# langchain-google-vertexai: Integración de LangChain con Vertex AI Gemini
+langgraph==1.0.7
+langchain==1.2.6
+langchain-core==1.2.7
+langchain-google-vertexai==3.2.1

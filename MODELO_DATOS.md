@@ -344,18 +344,22 @@ El sistema (LLM) decide automáticamente hacer JOIN cuando:
 
 ## 🚀 En Tu Sistema
 
-Tu chatbot NL → SQL ahora:
+Tu chatbot NL → SQL utiliza un **agente LangGraph** que:
 
-1. ✅ **Detecta automáticamente** cuándo necesita hacer JOINs
-2. ✅ **Obtiene los schemas** de todas las tablas de dimensiones
-3. ✅ **Genera SQL correcto** con los JOINs apropiados
-4. ✅ **Maneja errores** si alguna dimensión no existe
-5. ✅ **Optimiza consultas** usando información de relaciones
+1. ✅ **Detecta automáticamente** cuándo necesita hacer JOINs usando herramientas estructuradas
+2. ✅ **Obtiene los schemas** de todas las tablas de dimensiones mediante `get_dimensions_tool`
+3. ✅ **Genera SQL correcto** con los JOINs apropiados usando `generate_sql_tool`
+4. ✅ **Maneja errores** si alguna dimensión no existe (con caché de "no encontradas")
+5. ✅ **Optimiza consultas** usando información de relaciones y caché de schemas
+6. ✅ **Orquesta el flujo completo** desde la pregunta hasta la visualización usando LangGraph
 
 **Ejemplo de pregunta que activa JOINs:**
 - Usuario: "Muéstrame contratos agrupados por nombre de producto"
-- Sistema detecta: necesita nombres → JOIN con DimProducts
+- Agente llama a `get_dimensions_tool`: Obtiene información de DimProducts
+- Agente detecta: necesita nombres → JOIN con DimProducts
+- Agente llama a `generate_sql_tool`: Genera SQL con JOIN
 - SQL generado: Incluye `JOIN DimProducts ON contracts_gold_2.product_id = DimProducts.product_id`
+- Agente ejecuta la consulta y recomienda visualización
 
 ---
 

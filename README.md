@@ -6,6 +6,9 @@
 - **LLM**: Vertex AI Gemini (gemini-2.0-flash-exp)
   - Conversión de lenguaje natural a SQL
   - Recomendación inteligente de tipos de gráficos
+- **Agente**: LangGraph + LangChain
+  - Sistema agéntico con herramientas estructuradas
+  - Orquestación de flujo multi-paso (schema → SQL → ejecución → visualización)
 - **Base de Datos**: BigQuery
 - **Hosting**: Cloud Run
 - **CI/CD**: Cloud Build
@@ -16,11 +19,15 @@
 
 ## ✨ Características Principales
 
+- **Sistema Agéntico con LangGraph**: Orquestación inteligente del flujo NL→SQL usando herramientas estructuradas
 - **Conversión NL→SQL**: Pregunta en lenguaje natural, obtén SQL ejecutable
+- **JOINs Automáticos**: Detecta y genera automáticamente JOINs con tablas de dimensiones (DimProducts, DimProvince, DimTime)
 - **Visualización Inteligente**: El LLM analiza los datos y recomienda el tipo de gráfico más apropiado
 - **Gráficos Automáticos**: Bar, Line, Pie y Area charts generados automáticamente
 - **Interfaz Moderna**: Chat UI con React, TypeScript y Tailwind CSS
-- **Logging y Métricas**: Sistema completo de logging con tiempos, tokens y estadísticas
+- **Memoria Conversacional**: Mantiene contexto de las últimas 5 interacciones para mejor comprensión
+- **Gestión de Memoria**: Límites automáticos en cachés y métricas para prevenir crecimiento indefinido
+- **Logging y Métricas**: Sistema completo de logging con tiempos, tokens y estadísticas (Google Cloud Logging con fallback local)
 
 ## 📋 Pre-requisitos
 
@@ -125,13 +132,16 @@ poc/
 ├── backend/
 │   ├── app/
 │   │   ├── main.py          # FastAPI app, endpoints principales
+│   │   ├── agent.py         # Agente LangGraph con herramientas estructuradas
 │   │   ├── llm.py           # Integración con Vertex AI Gemini (NL→SQL + recomendación de gráficos)
 │   │   ├── db.py            # Conexión y ejecución de queries en BigQuery
 │   │   ├── prompts.py       # Prompts para el LLM
 │   │   ├── models.py        # Modelos Pydantic (request/response)
 │   │   └── logger.py        # Sistema de logging y métricas
 │   ├── Dockerfile           # Container para Cloud Run
-│   └── chatbot.log          # Logs de la aplicación
+│   ├── chatbot.log          # Logs de la aplicación
+│   ├── test_memory.py       # Script para probar gestión de memoria
+│   └── check_logging_api.py  # Script para verificar Google Cloud Logging
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/
@@ -145,13 +155,40 @@ poc/
 │   │   │       ├── WelcomeScreen.tsx  # Pantalla de bienvenida
 │   │   │       └── DataChart.tsx      # Componente de gráficos
 │   │   └── lib/
-│   │       └── chartUtils.ts # Tipos para gráficos
+│   │       └── utils.ts     # Utilidades (formateo de columnas y números)
 │   ├── dist/                # Build de producción
 │   └── package.json         # Dependencias del frontend
 ├── requirements.txt         # Dependencias de Python
 ├── .env.example            # Template de variables de entorno
+├── QUESTIONS_SET.md        # Conjunto de preguntas de prueba
+├── MODELO_DATOS.md         # Documentación del modelo de datos (Star Schema)
+├── TEST_MEMORY.md          # Guía de pruebas de gestión de memoria
+├── GOOGLE_CLOUD_LOGGING.md # Documentación de Google Cloud Logging
 └── README.md               # Este archivo
 ```
+
+## 🤖 Sistema Agéntico con LangGraph
+
+El sistema utiliza **LangGraph** para orquestar el flujo NL→SQL de forma estructurada:
+
+1. **Herramientas del Agente**:
+   - `get_schema_tool`: Obtiene el schema de la tabla principal
+   - `get_dimensions_tool`: Obtiene información de tablas de dimensiones
+   - `generate_sql_tool`: Genera SQL usando el LLM
+   - `execute_query_tool`: Ejecuta la consulta en BigQuery
+   - `recommend_chart_tool`: Recomienda el tipo de gráfico
+
+2. **Flujo del Agente**:
+   - El agente decide qué herramientas usar según la pregunta
+   - Ejecuta las herramientas en secuencia
+   - Mantiene estado entre pasos
+   - Maneja errores y reintentos automáticamente
+
+3. **Ventajas**:
+   - Flujo estructurado y predecible
+   - Fácil de extender con nuevas herramientas
+   - Mejor manejo de errores
+   - Logging detallado de cada paso
 
 ## 📊 Sistema de Visualización de Datos
 
@@ -170,6 +207,24 @@ El sistema utiliza **Gemini (LLM)** para analizar los resultados de las consulta
    - **null**: Si los datos no son adecuados para visualización
 
 3. **Renderizado Automático**: El frontend renderiza el gráfico recomendado usando Recharts
+
+## 🗄️ Modelo de Datos: Star Schema
+
+El sistema soporta un modelo de estrella (star schema) con:
+- **Fact Table**: `contracts_gold_2` (en dataset `Gold`)
+- **Dimension Tables**: `DimProducts`, `DimProvince`, `DimTime` (en dataset `Dim`)
+
+El agente detecta automáticamente cuándo necesita hacer JOINs con las tablas de dimensiones. Ver `MODELO_DATOS.md` para más detalles.
+
+## 💾 Gestión de Memoria
+
+El sistema implementa límites automáticos para prevenir crecimiento indefinido:
+- **Caché de Schemas**: Máximo 50 schemas (FIFO)
+- **Caché de Dimensiones**: Sin límite (pero con caché de "no encontradas" limitado a 100)
+- **Métricas**: Máximo 1000 métricas (FIFO, elimina 100 más antiguas cuando se alcanza el límite)
+- **Conversaciones Frontend**: Máximo 50 conversaciones, 100 mensajes por conversación
+
+Ver `TEST_MEMORY.md` para guía de pruebas.
 
 ### Ejemplos de Consultas que Generan Gráficos
 
@@ -234,6 +289,10 @@ pip install -r requirements.txt
 **Principales dependencias**:
 - `google-cloud-aiplatform`: Integración con Vertex AI Gemini
 - `google-cloud-bigquery`: Cliente de BigQuery
+- `google-cloud-logging`: Sistema de logging centralizado en GCP
+- `langgraph`: Framework para construir agentes con estado
+- `langchain`: Framework para aplicaciones LLM
+- `langchain-google-vertexai`: Integración de LangChain con Vertex AI
 - `fastapi`: Framework web
 - `uvicorn`: Servidor ASGI
 - `pydantic`: Validación de datos
@@ -260,9 +319,12 @@ npm install
 ## 🔍 Endpoints de la API
 
 - `POST /ask`: Endpoint principal para hacer preguntas en lenguaje natural
-  - Request: `{ "question": "tu pregunta aquí" }`
+  - Request: `{ "question": "tu pregunta aquí", "conversation_history": [...] }` (opcional)
   - Response: `{ "sql": "...", "columns": [...], "rows": [...], "total_rows": N, "chart_type": "bar|line|pie|area|null", "chart_config": {...} }`
+  - **Nota**: Ahora usa LangGraph con sistema agéntico para orquestar el flujo
 - `GET /health`: Health check del servicio
 - `GET /schema`: Obtener el schema de la tabla (con caché)
 - `GET /metrics`: Métricas y estadísticas del sistema
 - `GET /logs`: Últimos logs del sistema
+- `GET /cache/stats`: Estadísticas de cachés (schemas, dimensiones, métricas)
+- `POST /cache/clear`: Limpiar cachés (opción `clear_metrics` para limpiar también métricas)

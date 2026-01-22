@@ -5736,3 +5736,241 @@ SQL:
 2026-01-20 11:02:51,789 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.29s (3 tablas)
 2026-01-20 11:02:51,789 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
 2026-01-20 11:02:51,789 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-21 16:26:05,800 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:26:05,803 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:26:06,651 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:26:07,436 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:26:09,450 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-21 16:26:09,451 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-21 16:26:09,451 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-21 16:26:09,451 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-21 16:26:09,462 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:26:09,465 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:26:10,160 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-21 16:26:10,176 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:26:10,987 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-21 16:26:11,004 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:26:11,710 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-21 16:26:11,711 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.26s (3 tablas)
+2026-01-21 16:26:11,711 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-21 16:26:11,711 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-21 16:27:57,560 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [c8c36ddb]: List contracts grouped by province name
+2026-01-21 16:27:57,561 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Paso 1: Obteniendo schema de BigQuery
+2026-01-21 16:27:57,561 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery...
+2026-01-21 16:27:57,577 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:27:58,228 - nl2sql_chatbot - INFO - ℹ️  Schema obtenido en 0.67s
+2026-01-21 16:27:58,228 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Schema obtenido (0.67s)
+2026-01-21 16:27:58,228 - nl2sql_chatbot - INFO - ℹ️  ✨ Dimensiones obtenidas desde caché (3 tablas)
+2026-01-21 16:27:58,228 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] ✅ 3 tablas de dimensiones disponibles (0.00s)
+2026-01-21 16:27:58,229 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Tablas: DimProducts, DimProvince, DimTime
+2026-01-21 16:27:58,229 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Paso 2: Construyendo prompt
+2026-01-21 16:27:58,229 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Prompt construido (0.000s, 3231 chars)
+2026-01-21 16:27:58,229 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Prompt incluye 3 tablas de dimensiones
+2026-01-21 16:27:58,229 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Preview del prompt (últimos 500 chars):
+Si la pregunta pide agrupar por "province name" → HAZ JOIN con DimProvince y usa DimProvince.province_name en el GROUP BY
+- ⚠️ Si la pregunta pide agrupar por "product name" → HAZ JOIN con DimProducts y usa DimProducts.product_name en el GROUP BY
+- ⚠️ Si la pregunta pide análisis temporal (mes, trimestre, año) → HAZ JOIN con DimTime
+- Usa solo columnas de los schemas proporcionados
+- Agrega LIMIT 100
+- Sin markdown ni explicaciones
+
+
+PREGUNTA ACTUAL: List contracts grouped by province name
+
+SQL:
+2026-01-21 16:27:58,229 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Paso 3: Generando SQL con Gemini
+2026-01-21 16:27:58,229 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-21 16:27:58,230 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-21 16:28:02,425 - nl2sql_chatbot - INFO - ℹ️  ⚡ Respuesta recibida de Gemini en 4.19s
+2026-01-21 16:28:02,426 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 937, 'candidates_tokens': 112, 'total_tokens': 1049}
+2026-01-21 16:28:02,427 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 4.20s
+2026-01-21 16:28:02,427 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contra...
+2026-01-21 16:28:02,427 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Paso 4: Ejecutando SQL en BigQuery
+2026-01-21 16:28:02,427 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Inicio execute_query
+2026-01-21 16:28:02,445 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-21 16:28:02,446 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Cliente obtenido en 0.018s
+2026-01-21 16:28:02,446 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-21 16:28:02,446 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contra...
+2026-01-21 16:28:02,446 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Enviando query a BigQuery...
+2026-01-21 16:28:03,903 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Query enviada, esperando resultados...
+2026-01-21 16:28:04,288 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Resultados recibidos en 1.842s
+2026-01-21 16:28:04,288 - nl2sql_chatbot - INFO - ℹ️  Bytes procesados: 13,727 (0.01 MB)
+2026-01-21 16:28:04,288 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 1.86s
+2026-01-21 16:28:04,288 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 5
+2026-01-21 16:28:04,288 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] BigQuery completado (1.86s)
+2026-01-21 16:28:04,289 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Paso 5: Analizando datos para recomendación de gráfico
+2026-01-21 16:28:04,289 - nl2sql_chatbot - INFO - ℹ️  📊 Analizando datos con Gemini para recomendar tipo de gráfico...
+2026-01-21 16:28:07,812 - nl2sql_chatbot - INFO - ℹ️  ✅ Gráfico recomendado: bar
+2026-01-21 16:28:07,813 - nl2sql_chatbot - INFO - ℹ️  [c8c36ddb] Recomendación de gráfico: bar
+2026-01-21 16:28:07,813 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-21 16:28:07,813 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: c8c36ddb
+2026-01-21 16:28:07,813 - nl2sql_chatbot - INFO - ❓ Question: List contracts grouped by province name
+2026-01-21 16:28:07,813 - nl2sql_chatbot - INFO - ⏱️  Total Time: 10.25s
+2026-01-21 16:28:07,813 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-21 16:28:07,813 - nl2sql_chatbot - INFO -   - Get Schema: 0.67s
+2026-01-21 16:28:07,813 - nl2sql_chatbot - INFO -   - Build Prompt: 0.00s
+2026-01-21 16:28:07,815 - nl2sql_chatbot - INFO -   - Generate SQL (Gemini): 4.20s
+2026-01-21 16:28:07,815 - nl2sql_chatbot - INFO -   - Execute SQL (BigQuery): 1.86s
+2026-01-21 16:28:07,815 - nl2sql_chatbot - INFO -   - Chart Recommendation: 3.52s
+2026-01-21 16:28:07,815 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contracts_gold_2` AS contracts_gold_2 JOIN `bunge-de-poc-insumos.Dim.DimProvince` AS DimProvince ON contracts_gold_2.province_id = DimProvince.province_id GROUP BY DimProvince.province_name LIMIT 100
+2026-01-21 16:28:07,816 - nl2sql_chatbot - INFO - 📊 Rows: 5
+2026-01-21 16:28:07,816 - nl2sql_chatbot - INFO - 🎯 Tokens: {'prompt_tokens': 937, 'candidates_tokens': 112, 'total_tokens': 1049}
+2026-01-21 16:28:07,816 - nl2sql_chatbot - INFO - 🤖 Model: gemini-2.0-flash-exp
+2026-01-21 16:28:07,816 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-21 16:28:07,816 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-21 16:28:07,816 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [c8c36ddb] completado exitosamente en 10.25s
+2026-01-22 14:32:35,662 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-22 14:32:35,662 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-22 14:32:35,662 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-22 14:32:35,662 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-22 14:32:35,673 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 14:32:35,677 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 14:32:36,407 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-22 14:32:36,424 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 14:32:37,097 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-22 14:32:37,109 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 14:32:37,778 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-22 14:32:37,779 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.12s (3 tablas)
+2026-01-22 14:32:37,779 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-22 14:32:37,779 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-22 17:57:05,882 - numexpr.utils - INFO - NumExpr defaulting to 10 threads.
+2026-01-22 17:57:06,843 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-22 17:57:06,844 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-22 17:57:06,844 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-22 17:57:06,844 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-22 17:57:06,861 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 17:57:06,867 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 17:57:07,767 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-22 17:57:07,786 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 17:57:08,491 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-22 17:57:08,509 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 17:57:10,255 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-22 17:57:10,256 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 3.41s (3 tablas)
+2026-01-22 17:57:10,256 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-22 17:57:10,256 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-22 17:57:35,859 - numexpr.utils - INFO - NumExpr defaulting to 10 threads.
+2026-01-22 17:57:36,606 - nl2sql_chatbot - INFO - ℹ️  Iniciando aplicación NL → SQL Chatbot
+2026-01-22 17:57:36,606 - nl2sql_chatbot - INFO - ℹ️  Inicializando Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-22 17:57:36,606 - nl2sql_chatbot - INFO - ℹ️  Vertex AI inicializado correctamente
+2026-01-22 17:57:36,606 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schemas de tablas de dimensiones...
+2026-01-22 17:57:36,618 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 17:57:36,623 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 17:57:37,420 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProducts obtenido
+2026-01-22 17:57:37,440 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 17:57:38,151 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimProvince obtenido
+2026-01-22 17:57:38,171 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 17:57:38,852 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema de DimTime obtenido
+2026-01-22 17:57:38,853 - nl2sql_chatbot - INFO - ℹ️  Dimensiones cargadas en 2.25s (3 tablas)
+2026-01-22 17:57:38,853 - nl2sql_chatbot - INFO - ℹ️  ✅ Tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-22 17:57:38,853 - nl2sql_chatbot - INFO - ℹ️  ✅ El sistema puede generar JOINs con estas tablas
+2026-01-22 18:03:47,379 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [34a82991]: Show me contracts with product names
+2026-01-22 18:03:47,379 - nl2sql_chatbot - INFO - ℹ️  [34a82991] 🎯 Ejecutando agente LangGraph para: Show me contracts with product names...
+2026-01-22 18:03:47,379 - nl2sql_chatbot - INFO - ℹ️  [34a82991] Paso 1: Obteniendo schema...
+2026-01-22 18:03:47,382 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Obteniendo schema de BigQuery...
+2026-01-22 18:03:47,382 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery...
+2026-01-22 18:03:47,400 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-22 18:03:48,417 - nl2sql_chatbot - INFO - ℹ️  Schema obtenido en 1.03s
+2026-01-22 18:03:48,417 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] Schema obtenido: bunge-de-poc-insumos.Gold.contracts_gold_2
+2026-01-22 18:03:48,417 - nl2sql_chatbot - INFO - ℹ️  [34a82991] Paso 2: Obteniendo dimensiones...
+2026-01-22 18:03:48,419 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Obteniendo información de dimensiones...
+2026-01-22 18:03:48,419 - nl2sql_chatbot - INFO - ℹ️  ✨ Dimensiones obtenidas desde caché (3 tablas)
+2026-01-22 18:03:48,419 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] 3 tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-22 18:03:48,420 - nl2sql_chatbot - INFO - ℹ️  [34a82991] Paso 3: Generando SQL...
+2026-01-22 18:03:48,422 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Generando SQL para: Show me contracts with product names...
+2026-01-22 18:03:48,423 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-22 18:03:48,425 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-22 18:03:52,630 - nl2sql_chatbot - INFO - ℹ️  ⚡ Respuesta recibida de Gemini en 4.20s
+2026-01-22 18:03:52,634 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 937, 'candidates_tokens': 119, 'total_tokens': 1056}
+2026-01-22 18:03:52,634 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 4.21s
+2026-01-22 18:03:52,634 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT `bunge-de-poc-insumos.Gold.contracts_gold_2`.*, DimProducts.product_name FROM `bunge-de-poc-i...
+2026-01-22 18:03:52,634 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] SQL generado: SELECT `bunge-de-poc-insumos.Gold.contracts_gold_2`.*, DimProducts.product_name FROM `bunge-de-poc-i...
+2026-01-22 18:03:52,635 - nl2sql_chatbot - INFO - ℹ️  [34a82991] Paso 4: Ejecutando query...
+2026-01-22 18:03:52,637 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Ejecutando SQL en BigQuery...
+2026-01-22 18:03:52,638 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT `bunge-de-poc-insumos.Gold.contracts_gold_2`.*, DimProducts.product_name FROM `bunge-de-poc-insumos.Gold.contracts_gold_2` JOIN `bunge-de-poc-insumos.Dim.DimProducts` AS DimProducts ON `bunge-d...
+2026-01-22 18:03:52,638 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Inicio execute_query
+2026-01-22 18:03:52,657 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Cliente obtenido en 0.018s
+2026-01-22 18:03:52,657 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-22 18:03:52,657 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT `bunge-de-poc-insumos.Gold.contracts_gold_2`.*, DimProducts.product_name FROM `bunge-de-poc-i...
+2026-01-22 18:03:52,657 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Enviando query a BigQuery...
+2026-01-22 18:03:54,259 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Query enviada, esperando resultados...
+2026-01-22 18:03:54,667 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Resultados recibidos en 2.010s
+2026-01-22 18:03:54,674 - nl2sql_chatbot - INFO - ℹ️  Bytes procesados: 574,514 (0.55 MB)
+2026-01-22 18:03:54,674 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 2.04s
+2026-01-22 18:03:54,674 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 100
+2026-01-22 18:03:54,674 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] Query ejecutado: 100 filas retornadas
+2026-01-22 18:03:54,675 - nl2sql_chatbot - INFO - ℹ️  [34a82991] Paso 5: Recomendando gráfico...
+2026-01-22 18:03:54,676 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Analizando datos para recomendación de gráfico...
+2026-01-22 18:03:54,677 - nl2sql_chatbot - INFO - ℹ️  📊 Analizando datos con Gemini para recomendar tipo de gráfico...
+2026-01-22 18:03:59,097 - nl2sql_chatbot - INFO - ℹ️  ✅ Gráfico recomendado: bar
+2026-01-22 18:03:59,098 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] Gráfico recomendado: bar
+2026-01-22 18:03:59,098 - nl2sql_chatbot - INFO - ℹ️  [34a82991] ✅ Agente completado en 11.72s
+2026-01-22 18:03:59,099 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-22 18:03:59,099 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 34a82991
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO - ❓ Question: Show me contracts with product names
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO - ⏱️  Total Time: 11.72s
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO -   - Get Schema: 1.04s
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO -   - Get Dimensions: 0.00s
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO -   - Generate SQL: 4.22s
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO -   - Execute Query: 2.04s
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO -   - Recommend Chart: 4.42s
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT `bunge-de-poc-insumos.Gold.contracts_gold_2`.*, DimProducts.product_name FROM `bunge-de-poc-insumos.Gold.contracts_gold_2` JOIN `bunge-de-poc-insumos.Dim.DimProducts` AS DimProducts ON `bunge-de-poc-insumos.Gold.contracts_gold_2`.product_id = DimProducts.product_id LIMIT 100
+2026-01-22 18:03:59,100 - nl2sql_chatbot - INFO - 📊 Rows: 100
+2026-01-22 18:03:59,101 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-22 18:03:59,101 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-22 18:03:59,101 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [34a82991] completado exitosamente en 11.72s
+2026-01-22 18:04:27,307 - nl2sql_chatbot - INFO - ℹ️  🔵 Nuevo request [af5ce8c9]: List contracts grouped by province name
+2026-01-22 18:04:27,307 - nl2sql_chatbot - INFO - ℹ️  [af5ce8c9] 🎯 Ejecutando agente LangGraph para: List contracts grouped by province name...
+2026-01-22 18:04:27,307 - nl2sql_chatbot - INFO - ℹ️  [af5ce8c9] Paso 1: Obteniendo schema...
+2026-01-22 18:04:27,308 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Obteniendo schema de BigQuery...
+2026-01-22 18:04:27,308 - nl2sql_chatbot - INFO - ℹ️  📋 Obteniendo schema de BigQuery...
+2026-01-22 18:04:27,308 - nl2sql_chatbot - INFO - ℹ️  Schema obtenido en 0.00s
+2026-01-22 18:04:27,308 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] Schema obtenido: bunge-de-poc-insumos.Gold.contracts_gold_2
+2026-01-22 18:04:27,308 - nl2sql_chatbot - INFO - ℹ️  [af5ce8c9] Paso 2: Obteniendo dimensiones...
+2026-01-22 18:04:27,308 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Obteniendo información de dimensiones...
+2026-01-22 18:04:27,309 - nl2sql_chatbot - INFO - ℹ️  ✨ Dimensiones obtenidas desde caché (3 tablas)
+2026-01-22 18:04:27,309 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] 3 tablas de dimensiones disponibles: DimProducts, DimProvince, DimTime
+2026-01-22 18:04:27,309 - nl2sql_chatbot - INFO - ℹ️  [af5ce8c9] Paso 3: Generando SQL...
+2026-01-22 18:04:27,309 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Generando SQL para: List contracts grouped by province name...
+2026-01-22 18:04:27,309 - nl2sql_chatbot - INFO - ℹ️  Generando SQL con modelo: gemini-2.0-flash-exp
+2026-01-22 18:04:27,310 - nl2sql_chatbot - INFO - ℹ️  ⏳ Llamando a Gemini para generar SQL...
+2026-01-22 18:04:31,628 - nl2sql_chatbot - INFO - ℹ️  ⚡ Respuesta recibida de Gemini en 4.32s
+2026-01-22 18:04:31,629 - nl2sql_chatbot - INFO - ℹ️  Tokens usados: {'prompt_tokens': 937, 'candidates_tokens': 112, 'total_tokens': 1049}
+2026-01-22 18:04:31,629 - nl2sql_chatbot - INFO - ℹ️  SQL generado exitosamente en 4.32s
+2026-01-22 18:04:31,629 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contra...
+2026-01-22 18:04:31,629 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] SQL generado: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contra...
+2026-01-22 18:04:31,630 - nl2sql_chatbot - INFO - ℹ️  [af5ce8c9] Paso 4: Ejecutando query...
+2026-01-22 18:04:31,631 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Ejecutando SQL en BigQuery...
+2026-01-22 18:04:31,631 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contracts_gold_2` AS contracts_gold_2 JOIN `bunge-de-poc-insumos.Dim.DimProvince` AS DimProvince ON contra...
+2026-01-22 18:04:31,631 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Inicio execute_query
+2026-01-22 18:04:31,653 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Cliente obtenido en 0.021s
+2026-01-22 18:04:31,653 - nl2sql_chatbot - INFO - ℹ️  Ejecutando query en BigQuery (max 100 rows)
+2026-01-22 18:04:31,653 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contra...
+2026-01-22 18:04:31,653 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Enviando query a BigQuery...
+2026-01-22 18:04:33,108 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Query enviada, esperando resultados...
+2026-01-22 18:04:33,575 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Resultados recibidos en 1.921s
+2026-01-22 18:04:33,575 - nl2sql_chatbot - INFO - ℹ️  Bytes procesados: 13,727 (0.01 MB)
+2026-01-22 18:04:33,575 - nl2sql_chatbot - INFO - ℹ️  Query ejecutada exitosamente en 1.94s
+2026-01-22 18:04:33,576 - nl2sql_chatbot - INFO - ℹ️  Filas retornadas: 5
+2026-01-22 18:04:33,576 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] Query ejecutado: 5 filas retornadas
+2026-01-22 18:04:33,576 - nl2sql_chatbot - INFO - ℹ️  [af5ce8c9] Paso 5: Recomendando gráfico...
+2026-01-22 18:04:33,578 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Analizando datos para recomendación de gráfico...
+2026-01-22 18:04:33,578 - nl2sql_chatbot - INFO - ℹ️  📊 Analizando datos con Gemini para recomendar tipo de gráfico...
+2026-01-22 18:04:37,107 - nl2sql_chatbot - INFO - ℹ️  ✅ Gráfico recomendado: bar
+2026-01-22 18:04:37,107 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] Gráfico recomendado: bar
+2026-01-22 18:04:37,108 - nl2sql_chatbot - INFO - ℹ️  [af5ce8c9] ✅ Agente completado en 9.80s
+2026-01-22 18:04:37,108 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-22 18:04:37,108 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: af5ce8c9
+2026-01-22 18:04:37,108 - nl2sql_chatbot - INFO - ❓ Question: List contracts grouped by province name
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO - ⏱️  Total Time: 9.80s
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO -   - Get Schema: 0.00s
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO -   - Get Dimensions: 0.00s
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO -   - Generate SQL: 4.32s
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO -   - Execute Query: 1.95s
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO -   - Recommend Chart: 3.53s
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contracts_gold_2` AS contracts_gold_2 JOIN `bunge-de-poc-insumos.Dim.DimProvince` AS DimProvince ON contracts_gold_2.province_id = DimProvince.province_id GROUP BY DimProvince.province_name LIMIT 100
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO - 📊 Rows: 5
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-22 18:04:37,109 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [af5ce8c9] completado exitosamente en 9.80s

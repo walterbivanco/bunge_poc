@@ -16,6 +16,7 @@ from app.prompts import get_prompt
 from app.llm import init_vertex_ai, nl_to_sql, recommend_chart_type
 from app.db import get_table_schema, get_dimensions_info, execute_query, test_connection, clear_all_caches, get_cache_stats
 from app.logger import metrics_collector, log_info, log_error, log_warning
+from app.agent import run_agent
 
 # Cargar variables de entorno
 load_dotenv()
@@ -96,25 +97,24 @@ async def ask_question(request: AskRequest):
     """
     Endpoint principal: recibe pregunta en lenguaje natural y retorna resultados
     
-    Flujo:
-    1. Obtiene el schema de la tabla BigQuery
-    2. Construye el prompt con contexto
-    3. Llama a Gemini para generar SQL
-    4. Ejecuta el SQL en BigQuery
-    5. Retorna resultados formateados
+    Flujo (usando agente LangGraph):
+    1. El agente obtiene el schema de la tabla BigQuery
+    2. El agente obtiene información de dimensiones (si está disponible)
+    3. El agente genera SQL usando Gemini
+    4. El agente ejecuta el SQL en BigQuery
+    5. El agente recomienda tipo de gráfico (si aplica)
+    6. Retorna resultados formateados
+    
+    La misma API externa se mantiene, pero internamente usa LangGraph con herramientas estructuradas.
     """
     # Generar ID único para este request
     request_id = str(uuid.uuid4())[:8]
     start_time = time.time()
-    steps = []
     
     log_info(f"🔵 Nuevo request [{request_id}]: {request.question}")
     
     try:
-        # 1. Obtener schema de la tabla
-        step_start = time.time()
-        log_info(f"[{request_id}] Paso 1: Obteniendo schema de BigQuery")
-        
+        # Verificar configuración
         project_id = os.getenv("PROJECT_ID")
         dataset = os.getenv("BQ_DATASET")
         table = os.getenv("BQ_TABLE")
@@ -125,39 +125,9 @@ async def ask_question(request: AskRequest):
                 detail="Configuración incompleta: faltan PROJECT_ID, BQ_DATASET o BQ_TABLE"
             )
         
-        schema_text, table_full_id = get_table_schema()
-        step_duration = (time.time() - step_start) * 1000
-        steps.append({"name": "Get Schema", "duration_ms": step_duration})
-        log_info(f"[{request_id}] Schema obtenido ({step_duration/1000:.2f}s)")
-        
-        # 1.5. Obtener información de dimensiones (si está disponible)
-        dimensions_info = None
-        try:
-            step_start_dim = time.time()
-            # Intentar cargar dimensiones, forzando refresh si el cache tiene "no encontradas"
-            # Esto permite reintentar tablas que pueden haber sido creadas
-            dimensions_info = get_dimensions_info(force_refresh=False)
-            step_duration_dim = (time.time() - step_start_dim) * 1000
-            if dimensions_info.get("dimensions") and len(dimensions_info["dimensions"]) > 0:
-                log_info(f"[{request_id}] ✅ {len(dimensions_info['dimensions'])} tablas de dimensiones disponibles ({step_duration_dim/1000:.2f}s)")
-                log_info(f"[{request_id}] Tablas: {', '.join(dimensions_info['dimensions'].keys())}")
-            else:
-                # Solo mostrar warning la primera vez, después ser silencioso
-                if step_duration_dim > 0.1:  # Si tardó mucho, significa que intentó cargar
-                    log_info(f"[{request_id}] ℹ️  Sin tablas de dimensiones - usando solo tabla principal")
-                dimensions_info = None  # No pasar dimensiones vacías
-        except Exception as e:
-            log_warning(f"[{request_id}] Error cargando dimensiones: {e}")
-            dimensions_info = None
-        
-        # 2. Construir prompt
-        step_start = time.time()
-        log_info(f"[{request_id}] Paso 2: Construyendo prompt")
-        
         # Preparar historial de conversación si está disponible
         conversation_history = None
         if request.conversation_history:
-            # Convertir a formato simple para el prompt
             conversation_history = [
                 {
                     "role": msg.role,
@@ -168,56 +138,12 @@ async def ask_question(request: AskRequest):
             ]
             log_info(f"[{request_id}] Incluyendo {len(conversation_history)} mensajes anteriores en el contexto")
         
-        prompt = get_prompt(
+        # Ejecutar el agente LangGraph
+        agent_result = run_agent(
             question=request.question,
-            schema=schema_text,
-            project_id=project_id,
-            dataset=dataset,
-            table=table,
-            dimensions_info=dimensions_info,
-            conversation_history=conversation_history
+            conversation_history=conversation_history,
+            request_id=request_id
         )
-        step_duration = (time.time() - step_start) * 1000
-        steps.append({"name": "Build Prompt", "duration_ms": step_duration})
-        log_info(f"[{request_id}] Prompt construido ({step_duration/1000:.3f}s, {len(prompt)} chars)")
-        # Log del prompt completo para debugging (solo si hay dimensiones)
-        if dimensions_info and dimensions_info.get("dimensions"):
-            log_info(f"[{request_id}] Prompt incluye {len(dimensions_info['dimensions'])} tablas de dimensiones")
-            # Mostrar preview del prompt (últimas 500 chars para ver las relaciones)
-            prompt_preview = prompt[-500:] if len(prompt) > 500 else prompt
-            log_info(f"[{request_id}] Preview del prompt (últimos 500 chars):\n{prompt_preview}")
-        
-        # 3. Generar SQL con Gemini
-        log_info(f"[{request_id}] Paso 3: Generando SQL con Gemini")
-        llm_result = nl_to_sql(prompt)
-        sql = llm_result['sql']
-        steps.append({"name": "Generate SQL (Gemini)", "duration_ms": llm_result['duration_ms']})
-        
-        # 4. Ejecutar SQL en BigQuery
-        step_start = time.time()
-        log_info(f"[{request_id}] Paso 4: Ejecutando SQL en BigQuery")
-        bq_result = execute_query(sql)
-        step_duration = (time.time() - step_start) * 1000
-        steps.append({"name": "Execute SQL (BigQuery)", "duration_ms": step_duration})
-        log_info(f"[{request_id}] BigQuery completado ({step_duration/1000:.2f}s)")
-        
-        # 5. Analizar datos y recomendar tipo de gráfico
-        chart_recommendation = None
-        if bq_result["total_rows"] > 0 and bq_result["total_rows"] <= 100:
-            step_start = time.time()
-            log_info(f"[{request_id}] Paso 5: Analizando datos para recomendación de gráfico")
-            try:
-                chart_recommendation = recommend_chart_type(
-                    question=request.question,
-                    columns=bq_result["columns"],
-                    rows=bq_result["rows"]
-                )
-                step_duration = (time.time() - step_start) * 1000
-                steps.append({"name": "Chart Recommendation", "duration_ms": step_duration})
-                log_info(f"[{request_id}] Recomendación de gráfico: {chart_recommendation.get('chart_type', 'none')}")
-            except Exception as e:
-                log_warning(f"[{request_id}] Error al recomendar gráfico: {e}")
-                chart_recommendation = {"chart_type": None, "chart_config": None}
         
         # Calcular tiempo total
         total_time_ms = (time.time() - start_time) * 1000
@@ -226,27 +152,24 @@ async def ask_question(request: AskRequest):
         metrics_collector.log_request({
             "request_id": request_id,
             "question": request.question,
-            "steps": steps,
+            "steps": agent_result.get("steps", []),
             "total_time_ms": total_time_ms,
-            "sql": sql,
-            "rows_returned": bq_result["total_rows"],
-            "tokens_used": llm_result.get('tokens_used'),
-            "model_used": llm_result.get('model_used'),
-            "bytes_processed": bq_result.get('bytes_processed'),
+            "sql": agent_result.get("sql"),
+            "rows_returned": agent_result.get("total_rows", 0),
             "success": True
         })
         
-        # 6. Retornar respuesta
+        # Retornar respuesta
         log_info(f"✅ Request [{request_id}] completado exitosamente en {total_time_ms/1000:.2f}s")
         
         return AskResponse(
             question=request.question,
-            sql=sql,
-            columns=bq_result["columns"],
-            rows=bq_result["rows"],
-            total_rows=bq_result["total_rows"],
-            chart_type=chart_recommendation.get("chart_type") if chart_recommendation else None,
-            chart_config=chart_recommendation.get("chart_config") if chart_recommendation else None
+            sql=agent_result["sql"],
+            columns=agent_result["columns"],
+            rows=agent_result["rows"],
+            total_rows=agent_result["total_rows"],
+            chart_type=agent_result.get("chart_type"),
+            chart_config=agent_result.get("chart_config")
         )
         
     except ValueError as e:
@@ -256,7 +179,7 @@ async def ask_question(request: AskRequest):
         metrics_collector.log_request({
             "request_id": request_id,
             "question": request.question,
-            "steps": steps,
+            "steps": [],
             "total_time_ms": total_time_ms,
             "success": False,
             "error": str(e)
@@ -271,7 +194,7 @@ async def ask_question(request: AskRequest):
         metrics_collector.log_request({
             "request_id": request_id,
             "question": request.question,
-            "steps": steps,
+            "steps": [],
             "total_time_ms": total_time_ms,
             "success": False,
             "error": str(e)

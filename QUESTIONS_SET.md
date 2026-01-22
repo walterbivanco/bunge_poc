@@ -221,7 +221,7 @@ Estas preguntas retornan datos que no son adecuados para visualización (demasia
 
 ## 💡 Notas sobre la Generación de Gráficos
 
-El sistema utiliza **Gemini (LLM)** para determinar si los datos deben visualizarse:
+El sistema utiliza **Gemini (LLM)** a través de la herramienta `recommend_chart_tool` del agente para determinar si los datos deben visualizarse:
 
 - **Genera gráficos cuando**:
   - Hay datos agregados (GROUP BY)
@@ -236,14 +236,18 @@ El sistema utiliza **Gemini (LLM)** para determinar si los datos deben visualiza
   - Los datos son muy detallados (no agregados)
   - No hay una estructura clara para visualizar
 
+El agente llama automáticamente a `recommend_chart_tool` después de ejecutar una consulta exitosa para analizar los resultados y recomendar el tipo de visualización.
+
 ## 🔗 Notas sobre JOINs con Tablas de Dimensiones
 
-El sistema ahora puede generar SQL con JOINs automáticos cuando:
+El sistema utiliza un **agente LangGraph** que puede generar SQL con JOINs automáticos cuando:
 
-- **Se mencionan nombres o descripciones de productos**: El LLM detectará que necesita JOIN con `DimProducts`
-- **Se mencionan nombres de provincias o ubicaciones**: El LLM detectará que necesita JOIN con `DimProvince`
-- **Se hacen consultas temporales estructuradas**: El LLM puede usar JOIN con `DimTime` para mejor granularidad
-- **Se agrupa por categorías de dimensiones**: El LLM generará JOINs apropiados para obtener información descriptiva
+- **Se mencionan nombres o descripciones de productos**: El agente detectará que necesita JOIN con `DimProducts` usando la herramienta `get_dimensions_tool`
+- **Se mencionan nombres de provincias o ubicaciones**: El agente detectará que necesita JOIN con `DimProvince`
+- **Se hacen consultas temporales estructuradas**: El agente puede usar JOIN con `DimTime` para mejor granularidad
+- **Se agrupa por categorías de dimensiones**: El agente generará JOINs apropiados para obtener información descriptiva
+
+El agente utiliza herramientas estructuradas (`get_dimensions_tool`) para obtener información de dimensiones disponibles antes de generar el SQL, asegurando que los JOINs sean correctos y eficientes.
 
 **Ejemplos de detección automática**:
 - "province name" o "nombre de provincia" → JOIN con DimProvince
