@@ -25,9 +25,16 @@ gcloud services enable logging.googleapis.com --project=bunge-de-poc-insumos
 ```
 
 ### Permisos Necesarios
-El servicio de cuenta de servicio o usuario que ejecuta la aplicación necesita:
-- `roles/logging.logWriter` - Para escribir logs
-- O permisos equivalentes en el proyecto
+
+**Para escribir logs** (requerido):
+- `roles/logging.logWriter` - Permite escribir logs a Cloud Logging
+- O el permiso específico: `logging.logEntries.create`
+
+**Para leer/buscar logs** (opcional, solo para verificación):
+- `roles/logging.viewer` - Permite leer logs públicos
+- O `roles/logging.privateLogViewer` - Permite leer logs privados
+
+**Nota**: Si solo quieres enviar logs, solo necesitas `roles/logging.logWriter`. El permiso de lectura es solo útil para verificar que los logs se están enviando correctamente.
 
 ### Verificar si está Habilitado
 ```bash
@@ -76,25 +83,39 @@ El código en `backend/app/logger.py` ahora:
 
 ## ✅ Verificar que Funciona
 
-### Opción 1: Script de Verificación
+### Opción 1: Verificar si la API está Habilitada
 ```bash
 cd backend
 python check_logging_api.py
 ```
+Este script solo verifica si la API está habilitada y si el cliente se puede inicializar.
 
-### Opción 2: Ver Logs en la Aplicación
+### Opción 2: Verificar si los Logs se Están Enviando (RECOMENDADO)
+```bash
+cd backend
+python verify_logs_in_gcp.py
+```
+Este script:
+- Envía un log de prueba con un ID único
+- Espera unos segundos
+- Busca ese log en Cloud Logging
+- Confirma si los logs realmente están llegando a GCP
+
+**Este es el método más confiable** para verificar que todo funciona correctamente.
+
+### Opción 3: Ver Logs en la Aplicación
 Al iniciar la aplicación, deberías ver en los logs:
 ```
-✅ Google Cloud Logging habilitado
+✅ Google Cloud Logging enabled - Logs will be sent to GCP
 ```
 
 Si no está habilitado, verás:
 ```
-⚠️  Google Cloud Logging no disponible: [error]
-   Continuando con logging local solamente
+⚠️  Google Cloud Logging not available: [error]
+   Continuing with local logging only
 ```
 
-### Opción 3: Verificar en Cloud Console
+### Opción 4: Verificar en Cloud Console (Manual)
 1. Ir a **Cloud Console** > **Logging** > **Logs Explorer**
 2. Filtrar por:
    - Resource: `global`
@@ -142,19 +163,48 @@ Los logs se envían con la siguiente estructura:
 ## 🚨 Troubleshooting
 
 ### Error: "API not enabled"
+**Síntoma**: Error al inicializar el cliente o mensaje "API not enabled"  
 **Solución**: RSE debe habilitar `logging.googleapis.com`
+```bash
+gcloud services enable logging.googleapis.com --project=<PROJECT_ID>
+```
 
-### Error: "Permission denied"
-**Solución**: Verificar que la cuenta de servicio tenga `roles/logging.logWriter`
+### Error: "Permission 'logging.logEntries.create' denied" (403)
+**Síntoma**: El script `verify_logs_in_gcp.py` muestra "Permission denied" al enviar logs  
+**Causa**: Falta el permiso para escribir logs  
+**Solución**: RSE debe otorgar el rol `roles/logging.logWriter`
+
+**Para usuario:**
+```bash
+gcloud projects add-iam-policy-binding <PROJECT_ID> \
+  --member='user:tu-email@dominio.com' \
+  --role='roles/logging.logWriter'
+```
+
+**Para service account:**
+```bash
+gcloud projects add-iam-policy-binding <PROJECT_ID> \
+  --member='serviceAccount:SA_NAME@PROJECT_ID.iam.gserviceaccount.com' \
+  --role='roles/logging.logWriter'
+```
+
+### Error: "Permission denied when searching logs"
+**Síntoma**: El script puede enviar logs pero no puede buscarlos  
+**Solución**: Necesitas también `roles/logging.viewer` o `roles/logging.privateLogViewer` para leer logs
 
 ### Error: "Module not found"
-**Solución**: Instalar dependencia: `pip install google-cloud-logging`
+**Síntoma**: `ImportError: No module named 'google.cloud.logging'`  
+**Solución**: Instalar dependencia:
+```bash
+pip install google-cloud-logging
+```
 
 ### Los logs no aparecen en Cloud Console
-1. Verificar que la API esté habilitada
-2. Verificar permisos de la cuenta de servicio
-3. Esperar unos segundos (los logs pueden tardar en aparecer)
-4. Verificar el filtro en Logs Explorer
+1. **Verificar que la API esté habilitada**: `python check_logging_api.py`
+2. **Verificar permisos**: `python verify_logs_in_gcp.py` (detecta problemas de permisos)
+3. **Esperar unos segundos**: Los logs pueden tardar 5-10 segundos en aparecer
+4. **Verificar el filtro en Logs Explorer**: Usar `logName="projects/PROJECT_ID/logs/nl2sql_chatbot"`
+5. **Verificar que estás en el proyecto correcto** en la consola de GCP
 
 ---
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
-Script para verificar si Google Cloud Logging API está habilitado
+Script to verify if Google Cloud Logging API is enabled
+Note: This only checks if the API is enabled, not if logs are actually being sent.
+For full verification including log delivery, use: verify_logs_in_gcp.py
 """
 import os
 import sys
@@ -39,6 +41,8 @@ def check_logging_api():
             print("✅ Cloud Logging API is ENABLED")
             print("✅ Client initialized successfully")
             print("✅ Logs will be automatically sent to Google Cloud Logging")
+            print("\n💡 To verify logs are actually being sent, run:")
+            print("   python verify_logs_in_gcp.py")
             return True
         except exceptions.PermissionDenied as e:
             print("❌ Cloud Logging API is NOT enabled or you don't have permissions")
