@@ -39,7 +39,7 @@ if GCP_LOGGING_AVAILABLE:
             # Solo loguear si se configuró exitosamente (evitar spam en cada import)
             import sys
             if not hasattr(sys, '_gcp_logging_initialized'):
-                print("✅ Google Cloud Logging habilitado - Los logs se enviarán a GCP")
+                print("✅ Google Cloud Logging enabled - Logs will be sent to GCP")
                 sys._gcp_logging_initialized = True
     except Exception as e:
         # Si falla (API no habilitada, permisos, etc.), continuar con logging local
@@ -49,10 +49,10 @@ if GCP_LOGGING_AVAILABLE:
             error_msg = str(e).lower()
             # Solo mostrar warning si es un error de API no habilitada, no errores de importación
             if "403" in error_msg or "not enabled" in error_msg or "permission" in error_msg:
-                print("⚠️  Google Cloud Logging no disponible (API no habilitada o sin permisos)")
-                print("   Continuando con logging local solamente")
+                print("⚠️  Google Cloud Logging not available (API not enabled or no permissions)")
+                print("   Continuing with local logging only")
                 print(f"   Error: {str(e)[:100]}...")
-                print("   Para habilitar: gcloud services enable logging.googleapis.com --project=<PROJECT_ID>")
+                print("   To enable: gcloud services enable logging.googleapis.com --project=<PROJECT_ID>")
             # Para otros errores (conexión, etc.), ser más silencioso
             sys._gcp_logging_failed = True
 
@@ -96,7 +96,7 @@ class MetricsCollector:
         if len(self.metrics) >= self.MAX_METRICS:
             # Eliminar las métricas más antiguas (primeras 100)
             self.metrics = self.metrics[100:]
-            logger.debug(f"🧹 Limpieza de memoria: eliminadas 100 métricas antiguas")
+            logger.debug(f"🧹 Memory cleanup: removed 100 old metrics")
         
         self.metrics.append(metric)
         
@@ -144,11 +144,11 @@ class MetricsCollector:
         """
         if keep_recent > 0 and len(self.metrics) > keep_recent:
             self.metrics = self.metrics[-keep_recent:]
-            logger.info(f"🧹 Limpieza de métricas: mantenidas {keep_recent} más recientes")
+            logger.info(f"🧹 Metrics cleanup: kept {keep_recent} most recent")
         else:
             count = len(self.metrics)
             self.metrics.clear()
-            logger.info(f"🧹 Limpieza de métricas: eliminadas {count} métricas")
+            logger.info(f"🧹 Metrics cleanup: removed {count} metrics")
     
     def get_stats(self) -> Dict[str, Any]:
         """Obtiene estadísticas generales"""

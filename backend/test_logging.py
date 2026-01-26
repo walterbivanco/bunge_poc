@@ -11,35 +11,35 @@ from dotenv import load_dotenv
 load_dotenv()
 
 print("=" * 60)
-print("🧪 Prueba de Logging")
+print("🧪 Logging Test")
 print("=" * 60)
 
 # Importar el módulo de logging (esto es lo que hace la app al iniciar)
 try:
     from app.logger import logger, log_info, log_warning, log_error
-    print("✅ Módulo logger importado correctamente")
+    print("✅ Logger module imported successfully")
 except Exception as e:
-    print(f"❌ Error importando logger: {e}")
+    print(f"❌ Error importing logger: {e}")
     sys.exit(1)
 
-print("\n📝 Probando diferentes niveles de log:")
+print("\n📝 Testing different log levels:")
 print("-" * 60)
 
 # Probar diferentes tipos de logs
-log_info("Este es un mensaje de información")
-log_warning("Este es un mensaje de advertencia")
-log_error("Este es un mensaje de error (simulado)")
+log_info("This is an info message")
+log_warning("This is a warning message")
+log_error("This is an error message (simulated)")
 
 # Probar logger directamente
-logger.info("Log directo con logger.info()")
-logger.debug("Log de debug (no debería aparecer si level=INFO)")
+logger.info("Direct log with logger.info()")
+logger.debug("Debug log (should not appear if level=INFO)")
 
 print("\n" + "=" * 60)
-print("✅ Prueba completada")
+print("✅ Test completed")
 print("=" * 60)
-print("\n📋 Verificación:")
-print("   1. ✅ Si ves los mensajes arriba → Logging local funciona")
-print("   2. ✅ Si no hay errores → El código maneja correctamente la ausencia de Cloud Logging")
-print("   3. 📄 Revisa chatbot.log para ver los logs guardados en archivo")
-print("\n💡 Si la API de Cloud Logging está habilitada, también verás:")
-print("   '✅ Google Cloud Logging habilitado - Los logs se enviarán a GCP'")
+print("\n📋 Verification:")
+print("   1. ✅ If you see the messages above → Local logging works")
+print("   2. ✅ If there are no errors → Code correctly handles absence of Cloud Logging")
+print("   3. 📄 Check chatbot.log to see logs saved to file")
+print("\n💡 If Cloud Logging API is enabled, you will also see:")
+print("   '✅ Google Cloud Logging enabled - Logs will be sent to GCP'")

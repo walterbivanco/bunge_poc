@@ -22,12 +22,12 @@ from app.agent import run_agent
 load_dotenv()
 
 # Inicializar Vertex AI al arrancar la aplicación
-log_info("Iniciando aplicación NL → SQL Chatbot")
+log_info("Starting NL → SQL Chatbot application")
 try:
     init_vertex_ai()
-    log_info("Vertex AI inicializado correctamente")
+    log_info("Vertex AI initialized successfully")
 except Exception as e:
-    log_warning(f"No se pudo inicializar Vertex AI: {e}")
+    log_warning(f"Could not initialize Vertex AI: {e}")
 
 # Verificar tablas de dimensiones al inicio (silenciosamente)
 try:
@@ -36,14 +36,14 @@ try:
     dimensions_info = get_dimensions_info(use_cache=True, force_refresh=False)
     if dimensions_info.get("dimensions") and len(dimensions_info["dimensions"]) > 0:
         dim_names = list(dimensions_info["dimensions"].keys())
-        log_info(f"✅ Tablas de dimensiones disponibles: {', '.join(dim_names)}")
-        log_info("✅ El sistema puede generar JOINs con estas tablas")
+        log_info(f"✅ Dimension tables available: {', '.join(dim_names)}")
+        log_info("✅ System can generate JOINs with these tables")
     else:
         # Solo mostrar warning si realmente no hay tablas (no si están en cache como "no encontradas")
-        log_info("ℹ️  Sin tablas de dimensiones - el sistema funcionará solo con la tabla principal")
-        log_info("   Para forzar recarga de dimensiones: POST /dimensions/refresh")
+        log_info("ℹ️  No dimension tables - system will work only with main table")
+        log_info("   To force dimension reload: POST /dimensions/refresh")
 except Exception as e:
-    log_warning(f"⚠️  Error verificando dimensiones al inicio: {e}")
+    log_warning(f"⚠️  Error checking dimensions at startup: {e}")
 
 # Crear aplicación FastAPI
 app = FastAPI(
@@ -111,7 +111,7 @@ async def ask_question(request: AskRequest):
     request_id = str(uuid.uuid4())[:8]
     start_time = time.time()
     
-    log_info(f"🔵 Nuevo request [{request_id}]: {request.question}")
+    log_info(f"🔵 New request [{request_id}]: {request.question}")
     
     try:
         # Verificar configuración
@@ -136,7 +136,7 @@ async def ask_question(request: AskRequest):
                 }
                 for msg in request.conversation_history
             ]
-            log_info(f"[{request_id}] Incluyendo {len(conversation_history)} mensajes anteriores en el contexto")
+            log_info(f"[{request_id}] Including {len(conversation_history)} previous messages in context")
         
         # Ejecutar el agente LangGraph
         agent_result = run_agent(
@@ -160,7 +160,7 @@ async def ask_question(request: AskRequest):
         })
         
         # Retornar respuesta
-        log_info(f"✅ Request [{request_id}] completado exitosamente en {total_time_ms/1000:.2f}s")
+        log_info(f"✅ Request [{request_id}] completed successfully in {total_time_ms/1000:.2f}s")
         
         return AskResponse(
             question=request.question,
@@ -174,7 +174,7 @@ async def ask_question(request: AskRequest):
         
     except ValueError as e:
         total_time_ms = (time.time() - start_time) * 1000
-        log_error(f"[{request_id}] Error de validación", e)
+        log_error(f"[{request_id}] Validation error", e)
         
         metrics_collector.log_request({
             "request_id": request_id,
@@ -189,7 +189,7 @@ async def ask_question(request: AskRequest):
         
     except Exception as e:
         total_time_ms = (time.time() - start_time) * 1000
-        log_error(f"[{request_id}] Error procesando pregunta", e)
+        log_error(f"[{request_id}] Error processing question", e)
         
         metrics_collector.log_request({
             "request_id": request_id,
@@ -214,7 +214,7 @@ async def refresh_dimensions():
     """
     try:
         from app.db import clear_dimensions_cache
-        log_info("🔄 Forzando recarga de tablas de dimensiones...")
+        log_info("🔄 Forcing dimension tables reload...")
         clear_dimensions_cache()
         dimensions_info = get_dimensions_info(force_refresh=True)
         
@@ -233,7 +233,7 @@ async def refresh_dimensions():
                 "dimensions": dimensions_info
             }
     except Exception as e:
-        log_error("Error recargando dimensiones", e)
+        log_error("Error reloading dimensions", e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -248,14 +248,14 @@ async def get_schema(refresh: bool = False):
     try:
         schema_text, table_id = get_table_schema(use_cache=not refresh)
         cached_str = " (sin caché)" if refresh else " (caché)"
-        log_info(f"Schema solicitado para tabla: {table_id}{cached_str}")
+        log_info(f"Schema requested for table: {table_id}{cached_str}")
         
         # Intentar obtener información de dimensiones
         dimensions_info = None
         try:
             dimensions_info = get_dimensions_info(use_cache=not refresh)
         except Exception as e:
-            log_warning(f"No se pudieron cargar dimensiones: {e}")
+            log_warning(f"Could not load dimensions: {e}")
         
         result = {
             "table": table_id,
@@ -267,7 +267,7 @@ async def get_schema(refresh: bool = False):
         
         return result
     except Exception as e:
-        log_error("Error obteniendo schema", e)
+        log_error("Error getting schema", e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -276,7 +276,7 @@ async def get_metrics():
     """
     Endpoint para obtener métricas y estadísticas del sistema
     """
-    log_info("Métricas solicitadas")
+    log_info("Metrics requested")
     try:
         stats = metrics_collector.get_stats()
         recent = metrics_collector.get_recent_metrics(limit=10)
@@ -286,7 +286,7 @@ async def get_metrics():
             "recent_requests": recent
         }
     except Exception as e:
-        log_error("Error obteniendo métricas", e)
+        log_error("Error getting metrics", e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -295,7 +295,7 @@ async def get_logs(lines: int = 50):
     """
     Endpoint para obtener los últimos logs
     """
-    log_info(f"Logs solicitados (últimas {lines} líneas)")
+    log_info(f"Logs requested (last {lines} lines)")
     try:
         import os
         log_file = "chatbot.log"
@@ -313,7 +313,7 @@ async def get_logs(lines: int = 50):
             "showing": len(recent_lines)
         }
     except Exception as e:
-        log_error("Error obteniendo logs", e)
+        log_error("Error getting logs", e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -325,7 +325,7 @@ async def clear_cache(clear_metrics: bool = False):
     Query params:
         - clear_metrics: Si es True, también limpia las métricas almacenadas
     """
-    log_info("🧹 Solicitud de limpieza de cachés")
+    log_info("🧹 Cache cleanup requested")
     try:
         clear_all_caches()
         cache_stats = get_cache_stats()
@@ -334,7 +334,7 @@ async def clear_cache(clear_metrics: bool = False):
         if clear_metrics:
             metrics_collector.clear_metrics()
             metrics_cleared = True
-            log_info("🧹 Métricas también limpiadas")
+            log_info("🧹 Metrics also cleared")
         
         metrics_stats = {
             "total_metrics": len(metrics_collector.metrics),
@@ -349,7 +349,7 @@ async def clear_cache(clear_metrics: bool = False):
             "metrics_stats": metrics_stats
         }
     except Exception as e:
-        log_error("Error limpiando cachés", e)
+        log_error("Error clearing caches", e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -369,7 +369,7 @@ async def get_cache_statistics():
             "metrics_stats": metrics_stats
         }
     except Exception as e:
-        log_error("Error obteniendo estadísticas de caché", e)
+        log_error("Error getting cache statistics", e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -408,6 +408,6 @@ else:
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8080))
-    log_info(f"Iniciando servidor en puerto {port}")
+    log_info(f"Starting server on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
 

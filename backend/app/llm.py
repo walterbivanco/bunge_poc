@@ -20,7 +20,7 @@ def init_vertex_ai():
     if not project_id:
         raise ValueError("PROJECT_ID no está configurado en las variables de entorno")
     
-    log_info(f"Inicializando Vertex AI - Project: {project_id}, Location: {location}")
+    log_info(f"Initializing Vertex AI - Project: {project_id}, Location: {location}")
     vertexai.init(project=project_id, location=location)
 
 
@@ -43,7 +43,7 @@ def nl_to_sql(prompt: str, model_name: Optional[str] = None, max_retries: int = 
         model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-exp")
     
     start_time = time.time()
-    log_info(f"Generando SQL con modelo: {model_name}")
+    log_info(f"Generating SQL with model: {model_name}")
     
     # Retry logic con backoff exponencial
     retry_count = 0
@@ -65,15 +65,15 @@ def nl_to_sql(prompt: str, model_name: Optional[str] = None, max_retries: int = 
             
             # Generar el SQL
             if retry_count > 0:
-                log_warning(f"Reintento {retry_count}/{max_retries} - Llamando a Gemini...")
+                log_warning(f"Retry {retry_count}/{max_retries} - Calling Gemini...")
             else:
-                log_info("⏳ Llamando a Gemini para generar SQL...")
+                log_info("⏳ Calling Gemini to generate SQL...")
             
             # Medir tiempo de llamada a la API
             api_start = time.time()
             response = model.generate_content(prompt)
             api_duration = (time.time() - api_start) * 1000
-            log_info(f"⚡ Respuesta recibida de Gemini en {api_duration/1000:.2f}s")
+            log_info(f"⚡ Response received from Gemini in {api_duration/1000:.2f}s")
         
             # Extraer solo el SQL de la respuesta
             sql = extract_sql_from_response(response.text)
@@ -92,14 +92,14 @@ def nl_to_sql(prompt: str, model_name: Optional[str] = None, max_retries: int = 
                         'candidates_tokens': getattr(response.usage_metadata, 'candidates_token_count', None),
                         'total_tokens': getattr(response.usage_metadata, 'total_token_count', None)
                     }
-                    log_info(f"Tokens usados: {tokens_used}")
+                    log_info(f"Tokens used: {tokens_used}")
             except:
                 pass
             
             if retry_count > 0:
-                log_info(f"✅ Éxito después de {retry_count} reintento(s) en {duration_ms/1000:.2f}s")
+                log_info(f"✅ Success after {retry_count} retry(s) in {duration_ms/1000:.2f}s")
             else:
-                log_info(f"SQL generado exitosamente en {duration_ms/1000:.2f}s")
+                log_info(f"SQL generated successfully in {duration_ms/1000:.2f}s")
             
             log_info(f"SQL: {sql[:100]}..." if len(sql) > 100 else f"SQL: {sql}")
             
@@ -121,11 +121,11 @@ def nl_to_sql(prompt: str, model_name: Optional[str] = None, max_retries: int = 
             if retry_count <= max_retries:
                 # Backoff exponencial: 2^retry_count segundos
                 wait_time = 2 ** retry_count
-                log_warning(f"⚠️  Error 429 (Rate Limit) - Esperando {wait_time}s antes de reintentar...")
+                log_warning(f"⚠️  Error 429 (Rate Limit) - Waiting {wait_time}s before retrying...")
                 time.sleep(wait_time)
             else:
                 duration_ms = (time.time() - start_time) * 1000
-                log_error(f"❌ Error 429 después de {max_retries} reintentos ({duration_ms/1000:.2f}s)", e)
+                log_error(f"❌ Error 429 after {max_retries} retries ({duration_ms/1000:.2f}s)", e)
                 raise Exception(
                     f"Límite de cuota de Gemini excedido. "
                     f"Has alcanzado el límite de requests por minuto. "
@@ -135,7 +135,7 @@ def nl_to_sql(prompt: str, model_name: Optional[str] = None, max_retries: int = 
         except Exception as e:
             # Otros errores no reintentar
             duration_ms = (time.time() - start_time) * 1000
-            log_error(f"Error generando SQL después de {duration_ms/1000:.2f}s", e)
+            log_error(f"Error generating SQL after {duration_ms/1000:.2f}s", e)
             raise Exception(f"Error al generar SQL con Gemini: {str(e)}")
 
 
@@ -215,7 +215,7 @@ Respond ONLY with valid JSON in this exact format:
             }
         )
         
-        log_info("📊 Analizando datos con Gemini para recomendar tipo de gráfico...")
+        log_info("📊 Analyzing data with Gemini to recommend chart type...")
         response = model.generate_content(prompt)
         
         # Extraer JSON de la respuesta
@@ -231,7 +231,7 @@ Respond ONLY with valid JSON in this exact format:
         result = json.loads(response_text)
         
         if result.get("should_visualize") and result.get("chart_type"):
-            log_info(f"✅ Gráfico recomendado: {result['chart_type']}")
+            log_info(f"✅ Chart recommended: {result['chart_type']}")
             return {
                 "chart_type": result["chart_type"],
                 "chart_config": {
@@ -240,11 +240,11 @@ Respond ONLY with valid JSON in this exact format:
                 }
             }
         else:
-            log_info("ℹ️ No se recomienda visualización para estos datos")
+            log_info("ℹ️ Visualization not recommended for this data")
             return {"chart_type": None, "chart_config": None}
             
     except Exception as e:
-        log_warning(f"Error al analizar datos para gráfico: {e}")
+        log_warning(f"Error analyzing data for chart: {e}")
         return {"chart_type": None, "chart_config": None}
 
 
@@ -303,7 +303,7 @@ def validate_and_fix_table_name(sql: str, prompt: str) -> str:
         if all([project_id, dataset, table]):
             correct_table = f"{project_id}.{dataset}.{table}"
         else:
-            log_warning("⚠️ No se pudo extraer el nombre correcto de la tabla del prompt")
+            log_warning("⚠️ Could not extract correct table name from prompt")
             return sql
     else:
         correct_table = table_match.group(1)
@@ -340,7 +340,7 @@ def validate_and_fix_table_name(sql: str, prompt: str) -> str:
                         else:
                             replacement = correct_table
                         corrected_sql = corrected_sql.replace(match.group(0), replacement)
-                        log_warning(f"⚠️ Corregido nombre de tabla en SQL: '{found_table}' → '{correct_table}'")
+                        log_warning(f"⚠️ Fixed table name in SQL: '{found_table}' → '{correct_table}'")
     
     return corrected_sql
 

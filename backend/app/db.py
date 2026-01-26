@@ -66,7 +66,7 @@ def _get_single_table_schema(table_id: str, use_cache: bool = True) -> str:
             # Eliminar el primer elemento (más antiguo)
             oldest_key = next(iter(_SCHEMA_CACHE))
             del _SCHEMA_CACHE[oldest_key]
-            log_info(f"🧹 Cache de schemas lleno, eliminado: {oldest_key}")
+            log_info(f"🧹 Schema cache full, removed: {oldest_key}")
         
         _SCHEMA_CACHE[table_id] = schema_text
         
@@ -96,12 +96,12 @@ def get_table_schema(use_cache: bool = True) -> Tuple[str, str]:
     table_id = f"{project_id}.{dataset}.{table}"
     
     start_time = time.time()
-    log_info(f"📋 Obteniendo schema de BigQuery...")
+    log_info(f"📋 Getting schema from BigQuery...")
     
     schema_text = _get_single_table_schema(table_id, use_cache)
     
     duration_ms = (time.time() - start_time) * 1000
-    log_info(f"Schema obtenido en {duration_ms/1000:.2f}s")
+    log_info(f"Schema obtained in {duration_ms/1000:.2f}s")
     
     return schema_text, table_id
 
@@ -154,11 +154,11 @@ def get_dimensions_info(use_cache: bool = True, force_refresh: bool = False) -> 
         cached_result = _DIMENSIONS_CACHE[cache_key]
         # Solo loguear si hay dimensiones disponibles, si no hay, ser silencioso
         if cached_result.get("dimensions") and len(cached_result["dimensions"]) > 0:
-            log_info(f"✨ Dimensiones obtenidas desde caché ({len(cached_result['dimensions'])} tablas)")
+            log_info(f"✨ Dimensions obtained from cache ({len(cached_result['dimensions'])} tables)")
         return cached_result
     
     start_time = time.time()
-    log_info(f"📋 Obteniendo schemas de tablas de dimensiones...")
+    log_info(f"📋 Getting dimension table schemas...")
     
     # Definir tablas de dimensiones (pueden ser configuradas por env vars en el futuro)
     dim_tables = {
@@ -185,7 +185,7 @@ def get_dimensions_info(use_cache: bool = True, force_refresh: bool = False) -> 
                 "table_name": dim_table,
                 "schema": schema_text
             }
-            log_info(f"✅ Schema de {dim_name} obtenido")
+            log_info(f"✅ Schema for {dim_name} obtained")
         except Exception as e:
             from google.api_core import exceptions as gcp_exceptions
             
@@ -203,24 +203,24 @@ def get_dimensions_info(use_cache: bool = True, force_refresh: bool = False) -> 
                         _DIMENSIONS_NOT_FOUND_CACHE.discard(oldest)
                     
                     _DIMENSIONS_NOT_FOUND_CACHE.add(table_id)
-                    log_warning(f"⚠️ Tabla de dimensión {dim_name} no encontrada")
-                    log_warning(f"   ID buscado: {table_id}")
-                    log_warning(f"   Verifica:")
-                    log_warning(f"     1. Que la tabla exista en BigQuery Console")
-                    log_warning(f"     2. Que el nombre sea exacto: '{dim_table}'")
-                    log_warning(f"     3. Que esté en el dataset: {dataset}")
-                    log_warning(f"     4. Ejecuta: python backend/check_dimensions.py para diagnóstico")
+                    log_warning(f"⚠️ Dimension table {dim_name} not found")
+                    log_warning(f"   ID searched: {table_id}")
+                    log_warning(f"   Verify:")
+                    log_warning(f"     1. That the table exists in BigQuery Console")
+                    log_warning(f"     2. That the name is exact: '{dim_table}'")
+                    log_warning(f"     3. That it's in the dataset: {dim_dataset}")
+                    log_warning(f"     4. Run: python backend/check_dimensions.py for diagnosis")
                 if force_refresh:
                     _DIMENSIONS_NOT_FOUND_CACHE.discard(table_id)
             elif isinstance(e, gcp_exceptions.PermissionDenied) or "403" in error_str or "Permission" in error_str:
                 # Error de permisos
-                log_warning(f"⚠️ Permisos insuficientes para {dim_name} ({table_id})")
-                log_warning(f"   Verifica que tengas permisos de lectura en BigQuery")
+                log_warning(f"⚠️ Insufficient permissions for {dim_name} ({table_id})")
+                log_warning(f"   Verify you have read permissions in BigQuery")
                 log_warning(f"   Error: {error_str[:100]}")
             else:
                 # Otro tipo de error
-                log_warning(f"⚠️ Error obteniendo schema de {dim_name} ({table_id})")
-                log_warning(f"   Tipo: {error_type}")
+                log_warning(f"⚠️ Error getting schema for {dim_name} ({table_id})")
+                log_warning(f"   Type: {error_type}")
                 log_warning(f"   Error: {error_str[:150]}")
             # Continuar con las otras dimensiones aunque una falle
     
@@ -255,7 +255,7 @@ def get_dimensions_info(use_cache: bool = True, force_refresh: bool = False) -> 
     
     # Solo loguear si hay dimensiones, si no hay, ser más silencioso
     if len(dimensions) > 0:
-        log_info(f"Dimensiones cargadas en {duration_ms/1000:.2f}s ({len(dimensions)} tablas)")
+        log_info(f"Dimensions loaded in {duration_ms/1000:.2f}s ({len(dimensions)} tables)")
     # Si no hay dimensiones, no loguear nada (ya se mostraron warnings individuales)
     
     return result
@@ -266,7 +266,7 @@ def clear_dimensions_cache():
     global _DIMENSIONS_CACHE, _DIMENSIONS_NOT_FOUND_CACHE
     _DIMENSIONS_CACHE.clear()
     _DIMENSIONS_NOT_FOUND_CACHE.clear()
-    log_info("🧹 Cache de dimensiones limpiado")
+    log_info("🧹 Dimensions cache cleared")
 
 
 def clear_all_caches():
@@ -280,7 +280,7 @@ def clear_all_caches():
     _DIMENSIONS_CACHE.clear()
     _DIMENSIONS_NOT_FOUND_CACHE.clear()
     
-    log_info(f"🧹 Todos los cachés limpiados: {schema_count} schemas, {dim_count} dimensiones, {not_found_count} 'no encontradas'")
+    log_info(f"🧹 All caches cleared: {schema_count} schemas, {dim_count} dimensions, {not_found_count} 'not found'")
 
 
 def get_cache_stats() -> Dict[str, Any]:
@@ -320,7 +320,7 @@ def execute_query(sql: str, max_rows: int = 100) -> Dict[str, Any]:
     client = get_bigquery_client()
     log_info(f"🔵 [BQ] Cliente obtenido en {(time.time()-client_start):.3f}s")
     
-    log_info(f"Ejecutando query en BigQuery (max {max_rows} rows)")
+    log_info(f"Executing query in BigQuery (max {max_rows} rows)")
     log_info(f"Query: {sql[:100]}..." if len(sql) > 100 else f"Query: {sql}")
     
     try:
@@ -359,8 +359,8 @@ def execute_query(sql: str, max_rows: int = 100) -> Dict[str, Any]:
             if bytes_processed:
                 log_info(f"Bytes procesados: {bytes_processed:,} ({bytes_processed / 1024 / 1024:.2f} MB)")
         
-        log_info(f"Query ejecutada exitosamente en {duration_ms/1000:.2f}s")
-        log_info(f"Filas retornadas: {len(rows)}")
+        log_info(f"Query executed successfully in {duration_ms/1000:.2f}s")
+        log_info(f"Rows returned: {len(rows)}")
         
         return {
             "columns": columns,
@@ -372,7 +372,7 @@ def execute_query(sql: str, max_rows: int = 100) -> Dict[str, Any]:
         
     except Exception as e:
         duration_ms = (time.time() - start_time) * 1000
-        log_error(f"Error ejecutando query después de {duration_ms/1000:.2f}s", e)
+        log_error(f"Error executing query after {duration_ms/1000:.2f}s", e)
         raise Exception(f"Error ejecutando query en BigQuery: {str(e)}")
 
 

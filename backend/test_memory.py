@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Script para probar el manejo de memoria del sistema
-Verifica que los límites de caché funcionen correctamente
+Script to test system memory management
+Verifies that cache limits work correctly
 """
 import sys
 import os
@@ -22,8 +22,8 @@ def print_section(title):
     print("=" * 60)
 
 def test_cache_stats():
-    """Prueba el endpoint de estadísticas de caché"""
-    print_section("📊 Estadísticas de Caché")
+    """Tests the cache statistics endpoint"""
+    print_section("📊 Cache Statistics")
     try:
         response = requests.get(f"{BASE_URL}/cache/stats")
         if response.status_code == 200:
@@ -34,13 +34,13 @@ def test_cache_stats():
             print(f"❌ Error: {response.status_code}")
             print(response.text)
     except Exception as e:
-        print(f"❌ Error conectando al servidor: {e}")
-        print("   Asegúrate de que el servidor esté corriendo en http://localhost:8080")
+        print(f"❌ Error connecting to server: {e}")
+        print("   Make sure the server is running at http://localhost:8080")
     return None
 
 def test_clear_cache(clear_metrics=False):
-    """Prueba el endpoint de limpieza de caché"""
-    section_title = "🧹 Limpieza de Caché" + (" (incluyendo métricas)" if clear_metrics else "")
+    """Tests the cache cleanup endpoint"""
+    section_title = "🧹 Cache Cleanup" + (" (including metrics)" if clear_metrics else "")
     print_section(section_title)
     try:
         url = f"{BASE_URL}/cache/clear"
@@ -59,8 +59,8 @@ def test_clear_cache(clear_metrics=False):
     return None
 
 def test_multiple_requests():
-    """Hace múltiples requests para llenar los cachés"""
-    print_section("🔄 Llenando Cachés con Múltiples Requests")
+    """Makes multiple requests to fill the caches"""
+    print_section("🔄 Filling Caches with Multiple Requests")
     
     questions = [
         "Show me the average price per product name",
@@ -69,7 +69,7 @@ def test_multiple_requests():
         "Contracts by month and year",
     ]
     
-    print(f"Haciendo {len(questions)} requests para llenar cachés...")
+    print(f"Making {len(questions)} requests to fill caches...")
     for i, question in enumerate(questions, 1):
         try:
             print(f"  [{i}/{len(questions)}] {question[:50]}...")
@@ -80,27 +80,27 @@ def test_multiple_requests():
             )
             if response.status_code == 200:
                 data = response.json()
-                print(f"     ✅ {data.get('total_rows', 0)} filas")
+                print(f"     ✅ {data.get('total_rows', 0)} rows")
             else:
                 print(f"     ❌ Error: {response.status_code}")
         except Exception as e:
             print(f"     ❌ Error: {e}")
 
 def test_metrics_limit():
-    """Verifica el límite de métricas"""
-    print_section("📈 Verificando Límite de Métricas")
+    """Verifies the metrics limit"""
+    print_section("📈 Verifying Metrics Limit")
     try:
         response = requests.get(f"{BASE_URL}/metrics")
         if response.status_code == 200:
             data = response.json()
             stats = data.get("stats", {})
             total = stats.get("total_requests", 0)
-            print(f"Total de requests almacenados: {total}")
-            print(f"Límite máximo: 1000")
+            print(f"Total stored requests: {total}")
+            print(f"Maximum limit: 1000")
             if total > 1000:
-                print("⚠️  El límite se ha excedido (debería limpiarse automáticamente)")
+                print("⚠️  Limit has been exceeded (should be cleaned automatically)")
             else:
-                print(f"✅ Dentro del límite ({1000 - total} disponibles)")
+                print(f"✅ Within limit ({1000 - total} available)")
         else:
             print(f"❌ Error: {response.status_code}")
     except Exception as e:
@@ -108,13 +108,13 @@ def test_metrics_limit():
 
 def main():
     print("\n" + "=" * 60)
-    print("  🧪 PRUEBA DE MANEJO DE MEMORIA")
+    print("  🧪 MEMORY MANAGEMENT TEST")
     print("=" * 60)
-    print("\nEste script prueba:")
-    print("  1. Estadísticas de caché")
-    print("  2. Limpieza de caché")
-    print("  3. Llenado de cachés con múltiples requests")
-    print("  4. Verificación de límites de métricas")
+    print("\nThis script tests:")
+    print("  1. Cache statistics")
+    print("  2. Cache cleanup")
+    print("  3. Filling caches with multiple requests")
+    print("  4. Metrics limit verification")
     
     # 1. Ver estadísticas iniciales
     initial_stats = test_cache_stats()
@@ -123,7 +123,7 @@ def main():
     test_multiple_requests()
     
     # 3. Ver estadísticas después de llenar
-    print("\n⏳ Esperando 2 segundos...")
+    print("\n⏳ Waiting 2 seconds...")
     import time
     time.sleep(2)
     after_stats = test_cache_stats()
@@ -143,21 +143,21 @@ def main():
     # 8. Ver estadísticas finales
     final_stats = test_cache_stats()
     
-    print_section("📋 Resumen")
+    print_section("📋 Summary")
     if initial_stats and final_stats:
         cache_stats = final_stats.get("cache_stats", {})
-        print(f"Schemas en caché: {cache_stats.get('schema_cache_size', 0)}/{cache_stats.get('schema_cache_max', 0)}")
-        print(f"Dimensiones en caché: {cache_stats.get('dimensions_cache_size', 0)}")
-        print(f"Tablas 'no encontradas' en caché: {cache_stats.get('dimensions_not_found_cache_size', 0)}/{cache_stats.get('dimensions_not_found_cache_max', 0)}")
+        print(f"Cached schemas: {cache_stats.get('schema_cache_size', 0)}/{cache_stats.get('schema_cache_max', 0)}")
+        print(f"Cached dimensions: {cache_stats.get('dimensions_cache_size', 0)}")
+        print(f"'Not found' tables in cache: {cache_stats.get('dimensions_not_found_cache_size', 0)}/{cache_stats.get('dimensions_not_found_cache_max', 0)}")
         
         metrics_stats = final_stats.get("metrics_stats", {})
-        print(f"Métricas almacenadas: {metrics_stats.get('total_metrics', 0)}/{metrics_stats.get('max_metrics', 0)}")
+        print(f"Stored metrics: {metrics_stats.get('total_metrics', 0)}/{metrics_stats.get('max_metrics', 0)}")
     
-    print("\n✅ Prueba completada")
-    print("\n💡 Para probar manualmente:")
-    print("   - GET  http://localhost:8080/cache/stats  (ver estadísticas)")
-    print("   - POST http://localhost:8080/cache/clear  (limpiar cachés)")
-    print("   - GET  http://localhost:8080/metrics    (ver métricas)")
+    print("\n✅ Test completed")
+    print("\n💡 To test manually:")
+    print("   - GET  http://localhost:8080/cache/stats  (view statistics)")
+    print("   - POST http://localhost:8080/cache/clear  (clear caches)")
+    print("   - GET  http://localhost:8080/metrics    (view metrics)")
 
 if __name__ == "__main__":
     main()

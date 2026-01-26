@@ -53,9 +53,9 @@ def get_schema_tool() -> str:
     """
     import json
     try:
-        log_info("🔧 [Tool] Obteniendo schema de BigQuery...")
+        log_info("🔧 [Tool] Getting schema from BigQuery...")
         schema_text, table_id = get_table_schema(use_cache=True)
-        log_info(f"✅ [Tool] Schema obtenido: {table_id}")
+        log_info(f"✅ [Tool] Schema obtained: {table_id}")
         result = {
             "schema": schema_text,
             "table_id": table_id,
@@ -63,7 +63,7 @@ def get_schema_tool() -> str:
         }
         return json.dumps(result)
     except Exception as e:
-        log_error(f"❌ [Tool] Error obteniendo schema", e)
+        log_error(f"❌ [Tool] Error getting schema", e)
         result = {
             "schema": None,
             "table_id": None,
@@ -84,19 +84,19 @@ def get_dimensions_tool() -> str:
     """
     import json
     try:
-        log_info("🔧 [Tool] Obteniendo información de dimensiones...")
+        log_info("🔧 [Tool] Getting dimension information...")
         dimensions_info = get_dimensions_info(use_cache=True, force_refresh=False)
         
         if dimensions_info.get("dimensions") and len(dimensions_info["dimensions"]) > 0:
             dim_names = list(dimensions_info["dimensions"].keys())
-            log_info(f"✅ [Tool] {len(dim_names)} tablas de dimensiones disponibles: {', '.join(dim_names)}")
+            log_info(f"✅ [Tool] {len(dim_names)} dimension tables available: {', '.join(dim_names)}")
             result = {
                 "dimensions": dimensions_info,
                 "success": True,
                 "count": len(dimensions_info["dimensions"])
             }
         else:
-            log_info("ℹ️  [Tool] Sin tablas de dimensiones disponibles")
+            log_info("ℹ️  [Tool] No dimension tables available")
             result = {
                 "dimensions": None,
                 "success": True,
@@ -104,7 +104,7 @@ def get_dimensions_tool() -> str:
             }
         return json.dumps(result)
     except Exception as e:
-        log_warning(f"⚠️  [Tool] Error obteniendo dimensiones: {e}")
+        log_warning(f"⚠️  [Tool] Error getting dimensions: {e}")
         result = {
             "dimensions": None,
             "success": False,
@@ -136,7 +136,7 @@ def generate_sql_tool(
     """
     import json
     try:
-        log_info(f"🔧 [Tool] Generando SQL para: {question[:50]}...")
+        log_info(f"🔧 [Tool] Generating SQL for: {question[:50]}...")
         
         # Parsear inputs JSON
         schema_data = json.loads(schema) if isinstance(schema, str) else schema
@@ -173,7 +173,7 @@ def generate_sql_tool(
         llm_result = nl_to_sql(prompt)
         sql = llm_result['sql']
         
-        log_info(f"✅ [Tool] SQL generado: {sql[:100]}...")
+        log_info(f"✅ [Tool] SQL generated: {sql[:100]}...")
         
         result = {
             "sql": sql,
@@ -184,7 +184,7 @@ def generate_sql_tool(
         }
         return json.dumps(result)
     except Exception as e:
-        log_error(f"❌ [Tool] Error generando SQL", e)
+        log_error(f"❌ [Tool] Error generating SQL", e)
         result = {
             "sql": None,
             "success": False,
@@ -207,7 +207,7 @@ def execute_query_tool(sql: str, max_rows: int = 100) -> str:
     """
     import json
     try:
-        log_info(f"🔧 [Tool] Ejecutando SQL en BigQuery...")
+        log_info(f"🔧 [Tool] Executing SQL in BigQuery...")
         
         # Parsear SQL si viene como JSON
         sql_query = sql
@@ -222,7 +222,7 @@ def execute_query_tool(sql: str, max_rows: int = 100) -> str:
         
         result = execute_query(sql_query, max_rows=max_rows)
         
-        log_info(f"✅ [Tool] Query ejecutado: {result['total_rows']} filas retornadas")
+        log_info(f"✅ [Tool] Query executed: {result['total_rows']} rows returned")
         
         output = {
             "success": True,
@@ -233,7 +233,7 @@ def execute_query_tool(sql: str, max_rows: int = 100) -> str:
         }
         return json.dumps(output)
     except Exception as e:
-        log_error(f"❌ [Tool] Error ejecutando query", e)
+        log_error(f"❌ [Tool] Error executing query", e)
         output = {
             "success": False,
             "error": str(e),
@@ -277,7 +277,7 @@ def recommend_chart_tool(
             }
             return json.dumps(result)
         
-        log_info(f"🔧 [Tool] Analizando datos para recomendación de gráfico...")
+        log_info(f"🔧 [Tool] Analyzing data for chart recommendation...")
         
         recommendation = recommend_chart_type(
             question=question,
@@ -288,9 +288,9 @@ def recommend_chart_tool(
         
         chart_type = recommendation.get("chart_type")
         if chart_type:
-            log_info(f"✅ [Tool] Gráfico recomendado: {chart_type}")
+            log_info(f"✅ [Tool] Chart recommended: {chart_type}")
         else:
-            log_info("ℹ️  [Tool] No se recomienda visualización para estos datos")
+            log_info("ℹ️  [Tool] Visualization not recommended for this data")
         
         result = {
             "success": True,
@@ -299,7 +299,7 @@ def recommend_chart_tool(
         }
         return json.dumps(result)
     except Exception as e:
-        log_warning(f"⚠️  [Tool] Error recomendando gráfico: {e}")
+        log_warning(f"⚠️  [Tool] Error recommending chart: {e}")
         result = {
             "success": False,
             "chart_type": None,
@@ -326,7 +326,7 @@ TOOLS = [
 def start_node(state: AgentState) -> AgentState:
     """Nodo inicial: prepara el estado del agente"""
     request_id = state.get("request_id", "unknown")
-    log_info(f"[{request_id}] 🚀 Iniciando agente LangGraph")
+    log_info(f"[{request_id}] 🚀 Starting LangGraph agent")
     
     # Inicializar mensajes si no existen
     if "messages" not in state or not state["messages"]:
@@ -344,7 +344,7 @@ def agent_node(state: AgentState, model: ChatVertexAI) -> AgentState:
     Nodo principal del agente: el LLM decide qué herramienta usar
     """
     request_id = state.get("request_id", "unknown")
-    log_info(f"[{request_id}] 🤖 Agente decidiendo siguiente acción...")
+    log_info(f"[{request_id}] 🤖 Agent deciding next action...")
     
     messages = state.get("messages", [])
     
@@ -367,11 +367,11 @@ def should_continue(state: AgentState) -> str:
     
     # Si el último mensaje tiene tool_calls, ejecutar herramientas
     if hasattr(last_message, 'tool_calls') and last_message.tool_calls:
-        log_info(f"[{request_id}] 🔧 Agente decidió usar herramientas: {[tc['name'] for tc in last_message.tool_calls]}")
+        log_info(f"[{request_id}] 🔧 Agent decided to use tools: {[tc['name'] for tc in last_message.tool_calls]}")
         return "tools"
     
     # Si no hay tool_calls, finalizar
-    log_info(f"[{request_id}] ✅ Agente completó sin más herramientas")
+    log_info(f"[{request_id}] ✅ Agent completed without more tools")
     return "end"
 
 
@@ -380,7 +380,7 @@ def finalize_node(state: AgentState) -> AgentState:
     Nodo final: prepara la respuesta final del agente
     """
     request_id = state.get("request_id", "unknown")
-    log_info(f"[{request_id}] 📦 Finalizando respuesta del agente...")
+    log_info(f"[{request_id}] 📦 Finalizing agent response...")
     
     messages = state.get("messages", [])
     
@@ -471,7 +471,7 @@ def run_agent(
         Dict con los resultados: sql, columns, rows, total_rows, chart_type, chart_config, etc.
     """
     start_time = time.time()
-    log_info(f"[{request_id}] 🎯 Ejecutando agente LangGraph para: {question[:50]}...")
+    log_info(f"[{request_id}] 🎯 Running LangGraph agent for: {question[:50]}...")
     
     try:
         # Por ahora, usar flujo secuencial pero estructurado con herramientas
@@ -480,7 +480,7 @@ def run_agent(
         
         # Paso 1: Obtener schema
         step_start = time.time()
-        log_info(f"[{request_id}] Paso 1: Obteniendo schema...")
+        log_info(f"[{request_id}] Step 1: Getting schema...")
         schema_result_str = get_schema_tool.invoke({})
         import json
         schema_result = json.loads(schema_result_str)
@@ -494,7 +494,7 @@ def run_agent(
         
         # Paso 2: Obtener dimensiones (opcional)
         step_start = time.time()
-        log_info(f"[{request_id}] Paso 2: Obteniendo dimensiones...")
+        log_info(f"[{request_id}] Step 2: Getting dimensions...")
         dim_result_str = get_dimensions_tool.invoke({})
         dim_result = json.loads(dim_result_str)
         dimensions_info = dim_result.get("dimensions") if dim_result.get("success") else None
@@ -503,7 +503,7 @@ def run_agent(
         
         # Paso 3: Generar SQL
         step_start = time.time()
-        log_info(f"[{request_id}] Paso 3: Generando SQL...")
+        log_info(f"[{request_id}] Step 3: Generating SQL...")
         # Preparar inputs para generate_sql_tool
         schema_json = json.dumps({"schema": schema, "table_id": table_full_id})
         dim_json = json.dumps({"dimensions": dimensions_info}) if dimensions_info else None
@@ -526,7 +526,7 @@ def run_agent(
         
         # Paso 4: Ejecutar query
         step_start = time.time()
-        log_info(f"[{request_id}] Paso 4: Ejecutando query...")
+        log_info(f"[{request_id}] Step 4: Executing query...")
         query_result_str = execute_query_tool.invoke({"sql": sql})
         query_result = json.loads(query_result_str)
         step_duration = (time.time() - step_start) * 1000
@@ -539,7 +539,7 @@ def run_agent(
         chart_recommendation = None
         if query_result.get("total_rows", 0) > 0 and query_result.get("total_rows", 0) <= 100:
             step_start = time.time()
-            log_info(f"[{request_id}] Paso 5: Recomendando gráfico...")
+            log_info(f"[{request_id}] Step 5: Recommending chart...")
             chart_result_str = recommend_chart_tool.invoke({
                 "question": question,
                 "columns": json.dumps(query_result.get("columns", [])),
@@ -564,13 +564,13 @@ def run_agent(
             "steps": steps
         }
         
-        log_info(f"[{request_id}] ✅ Agente completado en {total_time_ms/1000:.2f}s")
+        log_info(f"[{request_id}] ✅ Agent completed in {total_time_ms/1000:.2f}s")
         return result
         
     except Exception as e:
-        log_error(f"[{request_id}] ❌ Error ejecutando agente", e)
+        log_error(f"[{request_id}] ❌ Error running agent", e)
         # Fallback al flujo tradicional
-        log_info(f"[{request_id}] 🔄 Usando flujo tradicional como fallback...")
+        log_info(f"[{request_id}] 🔄 Using traditional flow as fallback...")
         return _fallback_traditional_flow(question, conversation_history, request_id)
 
 
@@ -582,7 +582,7 @@ def _fallback_traditional_flow(
     """
     Flujo tradicional como fallback si el agente falla
     """
-    log_info(f"[{request_id}] 🔄 Usando flujo tradicional como fallback...")
+    log_info(f"[{request_id}] 🔄 Using traditional flow as fallback...")
     
     # Obtener schema
     schema_text, table_full_id = get_table_schema()
