@@ -90,20 +90,7 @@ python check_logging_api.py
 ```
 Este script solo verifica si la API está habilitada y si el cliente se puede inicializar.
 
-### Opción 2: Verificar si los Logs se Están Enviando (RECOMENDADO)
-```bash
-cd backend
-python verify_logs_in_gcp.py
-```
-Este script:
-- Envía un log de prueba con un ID único
-- Espera unos segundos
-- Busca ese log en Cloud Logging
-- Confirma si los logs realmente están llegando a GCP
-
-**Este es el método más confiable** para verificar que todo funciona correctamente.
-
-### Opción 3: Ver Logs en la Aplicación
+### Opción 2: Ver Logs en la Aplicación
 Al iniciar la aplicación, deberías ver en los logs:
 ```
 ✅ Google Cloud Logging enabled - Logs will be sent to GCP
@@ -115,7 +102,7 @@ Si no está habilitado, verás:
    Continuing with local logging only
 ```
 
-### Opción 4: Verificar en Cloud Console (Manual)
+### Opción 3: Verificar en Cloud Console (Manual)
 1. Ir a **Cloud Console** > **Logging** > **Logs Explorer**
 2. Filtrar por:
    - Resource: `global`
@@ -170,7 +157,7 @@ gcloud services enable logging.googleapis.com --project=<PROJECT_ID>
 ```
 
 ### Error: "Permission 'logging.logEntries.create' denied" (403)
-**Síntoma**: El script `verify_logs_in_gcp.py` muestra "Permission denied" al enviar logs  
+**Síntoma**: Al enviar logs aparece "Permission denied" (403)  
 **Causa**: Falta el permiso para escribir logs  
 **Solución**: RSE debe otorgar el rol `roles/logging.logWriter`
 
@@ -188,10 +175,6 @@ gcloud projects add-iam-policy-binding <PROJECT_ID> \
   --role='roles/logging.logWriter'
 ```
 
-### Error: "Permission denied when searching logs"
-**Síntoma**: El script puede enviar logs pero no puede buscarlos  
-**Solución**: Necesitas también `roles/logging.viewer` o `roles/logging.privateLogViewer` para leer logs
-
 ### Error: "Module not found"
 **Síntoma**: `ImportError: No module named 'google.cloud.logging'`  
 **Solución**: Instalar dependencia:
@@ -201,8 +184,8 @@ pip install google-cloud-logging
 
 ### Los logs no aparecen en Cloud Console
 1. **Verificar que la API esté habilitada**: `python check_logging_api.py`
-2. **Verificar permisos**: `python verify_logs_in_gcp.py` (detecta problemas de permisos)
-3. **Esperar unos segundos**: Los logs pueden tardar 5-10 segundos en aparecer
+2. **Verificar permisos**: La cuenta debe tener `roles/logging.logWriter`
+3. **Esperar unos segundos**: Los logs pueden tardar 1–2 minutos en aparecer
 4. **Verificar el filtro en Logs Explorer**: Usar `logName="projects/PROJECT_ID/logs/nl2sql_chatbot"`
 5. **Verificar que estás en el proyecto correcto** en la consola de GCP
 

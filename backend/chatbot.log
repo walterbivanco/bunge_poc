@@ -6720,3 +6720,136 @@ SQL:
 2026-01-28 14:41:46,635 - nl2sql_chatbot - INFO - ℹ️  Dimensions loaded in 2.34s (3 tables)
 2026-01-28 14:41:46,635 - nl2sql_chatbot - INFO - ℹ️  ✅ Dimension tables available: DimProducts, DimProvince, DimTime
 2026-01-28 14:41:46,635 - nl2sql_chatbot - INFO - ℹ️  ✅ System can generate JOINs with these tables
+2026-01-29 15:48:21,523 - numexpr.utils - INFO - NumExpr defaulting to 10 threads.
+2026-01-29 15:48:22,397 - nl2sql_chatbot - INFO - ℹ️  Starting NL → SQL Chatbot application
+2026-01-29 15:48:22,398 - nl2sql_chatbot - INFO - ℹ️  Initializing Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-29 15:48:22,398 - nl2sql_chatbot - INFO - ℹ️  Vertex AI initialized successfully
+2026-01-29 15:48:22,398 - nl2sql_chatbot - INFO - ℹ️  📋 Getting dimension table schemas...
+2026-01-29 15:48:22,412 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:48:22,418 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:48:23,320 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProducts obtained
+2026-01-29 15:48:23,341 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:48:24,019 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProvince obtained
+2026-01-29 15:48:24,038 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:48:24,646 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimTime obtained
+2026-01-29 15:48:24,646 - nl2sql_chatbot - INFO - ℹ️  Dimensions loaded in 2.25s (3 tables)
+2026-01-29 15:48:24,647 - nl2sql_chatbot - INFO - ℹ️  ✅ Dimension tables available: DimProducts, DimProvince, DimTime
+2026-01-29 15:48:24,647 - nl2sql_chatbot - INFO - ℹ️  ✅ System can generate JOINs with these tables
+2026-01-29 15:49:01,099 - nl2sql_chatbot - INFO - ℹ️  🔵 New request [8002e89f]: List contracts grouped by province name
+2026-01-29 15:49:01,099 - nl2sql_chatbot - INFO - ℹ️  [8002e89f] 🎯 Running LangGraph agent for: List contracts grouped by province name...
+2026-01-29 15:49:01,099 - nl2sql_chatbot - INFO - ℹ️  [8002e89f] Step 1: Getting schema...
+2026-01-29 15:49:01,102 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Getting schema from BigQuery...
+2026-01-29 15:49:01,102 - nl2sql_chatbot - INFO - ℹ️  📋 Getting schema from BigQuery...
+2026-01-29 15:49:01,122 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:49:01,951 - nl2sql_chatbot - INFO - ℹ️  Schema obtained in 0.85s
+2026-01-29 15:49:01,951 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] Schema obtained: bunge-de-poc-insumos.Gold.contracts_gold_2
+2026-01-29 15:49:01,952 - nl2sql_chatbot - INFO - ℹ️  [8002e89f] Step 2: Getting dimensions...
+2026-01-29 15:49:01,953 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Getting dimension information...
+2026-01-29 15:49:01,953 - nl2sql_chatbot - INFO - ℹ️  ✨ Dimensions obtained from cache (3 tables)
+2026-01-29 15:49:01,953 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] 3 dimension tables available: DimProducts, DimProvince, DimTime
+2026-01-29 15:49:01,954 - nl2sql_chatbot - INFO - ℹ️  [8002e89f] Step 3: Generating SQL...
+2026-01-29 15:49:01,956 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Generating SQL for: List contracts grouped by province name...
+2026-01-29 15:49:01,956 - nl2sql_chatbot - INFO - ℹ️  Generating SQL with model: gemini-2.0-flash-exp
+2026-01-29 15:49:01,959 - nl2sql_chatbot - INFO - ℹ️  ⏳ Calling Gemini to generate SQL...
+2026-01-29 15:49:05,862 - nl2sql_chatbot - WARNING - ⚠️  ⚠️  Error 429 (Rate Limit) - Waiting 2s before retrying...
+2026-01-29 15:49:07,866 - nl2sql_chatbot - WARNING - ⚠️  Retry 1/3 - Calling Gemini...
+2026-01-29 15:49:12,324 - nl2sql_chatbot - INFO - ℹ️  ⚡ Response received from Gemini in 4.46s
+2026-01-29 15:49:12,327 - nl2sql_chatbot - INFO - ℹ️  Tokens used: {'prompt_tokens': 937, 'candidates_tokens': 112, 'total_tokens': 1049}
+2026-01-29 15:49:12,328 - nl2sql_chatbot - INFO - ℹ️  ✅ Success after 1 retry(s) in 10.37s
+2026-01-29 15:49:12,328 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contra...
+2026-01-29 15:49:12,328 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] SQL generated: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contra...
+2026-01-29 15:49:12,328 - nl2sql_chatbot - INFO - ℹ️  [8002e89f] Step 4: Executing query...
+2026-01-29 15:49:12,329 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Executing SQL in BigQuery...
+2026-01-29 15:49:12,329 - nl2sql_chatbot - INFO - ℹ️  SQL: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contracts_gold_2` AS contracts_gold_2 JOIN `bunge-de-poc-insumos.Dim.DimProvince` AS DimProvince ON contra...
+2026-01-29 15:49:12,329 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Inicio execute_query
+2026-01-29 15:49:12,350 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Cliente obtenido en 0.021s
+2026-01-29 15:49:12,350 - nl2sql_chatbot - INFO - ℹ️  Executing query in BigQuery (max 100 rows)
+2026-01-29 15:49:12,350 - nl2sql_chatbot - INFO - ℹ️  Query: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contra...
+2026-01-29 15:49:12,350 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Enviando query a BigQuery...
+2026-01-29 15:49:14,146 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Query enviada, esperando resultados...
+2026-01-29 15:49:14,624 - nl2sql_chatbot - INFO - ℹ️  🔵 [BQ] Resultados recibidos en 2.274s
+2026-01-29 15:49:14,626 - nl2sql_chatbot - INFO - ℹ️  Bytes procesados: 13,727 (0.01 MB)
+2026-01-29 15:49:14,626 - nl2sql_chatbot - INFO - ℹ️  Query executed successfully in 2.30s
+2026-01-29 15:49:14,626 - nl2sql_chatbot - INFO - ℹ️  Rows returned: 5
+2026-01-29 15:49:14,626 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] Query executed: 5 rows returned
+2026-01-29 15:49:14,626 - nl2sql_chatbot - INFO - ℹ️  [8002e89f] Step 5: Recommending chart...
+2026-01-29 15:49:14,628 - nl2sql_chatbot - INFO - ℹ️  🔧 [Tool] Analyzing data for chart recommendation...
+2026-01-29 15:49:14,628 - nl2sql_chatbot - INFO - ℹ️  📊 Analyzing data with Gemini to recommend chart type...
+2026-01-29 15:49:19,262 - nl2sql_chatbot - INFO - ℹ️  ✅ Chart recommended: bar
+2026-01-29 15:49:19,262 - nl2sql_chatbot - INFO - ℹ️  ✅ [Tool] Chart recommended: bar
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO - ℹ️  [8002e89f] ✅ Agent completed in 18.16s
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO - 📊 REQUEST SUMMARY - ID: 8002e89f
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO - ❓ Question: List contracts grouped by province name
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO - ⏱️  Total Time: 18.16s
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO - 📝 Steps:
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO -   - Get Schema: 0.85s
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO -   - Get Dimensions: 0.00s
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO -   - Generate SQL: 10.37s
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO -   - Execute Query: 2.30s
+2026-01-29 15:49:19,263 - nl2sql_chatbot - INFO -   - Recommend Chart: 4.64s
+2026-01-29 15:49:19,264 - nl2sql_chatbot - INFO - 🔍 SQL: SELECT DimProvince.province_name, COUNT(*) AS total_contracts FROM `bunge-de-poc-insumos.Gold.contracts_gold_2` AS contracts_gold_2 JOIN `bunge-de-poc-insumos.Dim.DimProvince` AS DimProvince ON contracts_gold_2.province_id = DimProvince.province_id GROUP BY DimProvince.province_name LIMIT 100
+2026-01-29 15:49:19,264 - nl2sql_chatbot - INFO - 📊 Rows: 5
+2026-01-29 15:49:19,264 - nl2sql_chatbot - INFO - ✅ Success
+2026-01-29 15:49:19,264 - nl2sql_chatbot - INFO - ================================================================================
+2026-01-29 15:49:19,264 - nl2sql_chatbot - INFO - ℹ️  ✅ Request [8002e89f] completed successfully in 18.16s
+2026-01-29 15:51:40,166 - numexpr.utils - INFO - NumExpr defaulting to 10 threads.
+2026-01-29 15:51:41,017 - nl2sql_chatbot - INFO - ℹ️  Starting NL → SQL Chatbot application
+2026-01-29 15:51:41,017 - nl2sql_chatbot - INFO - ℹ️  Initializing Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-29 15:51:41,017 - nl2sql_chatbot - INFO - ℹ️  Vertex AI initialized successfully
+2026-01-29 15:51:41,017 - nl2sql_chatbot - INFO - ℹ️  📋 Getting dimension table schemas...
+2026-01-29 15:51:41,031 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:41,036 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:41,671 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProducts obtained
+2026-01-29 15:51:41,692 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:42,306 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProvince obtained
+2026-01-29 15:51:42,326 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:42,956 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimTime obtained
+2026-01-29 15:51:42,956 - nl2sql_chatbot - INFO - ℹ️  Dimensions loaded in 1.94s (3 tables)
+2026-01-29 15:51:42,956 - nl2sql_chatbot - INFO - ℹ️  ✅ Dimension tables available: DimProducts, DimProvince, DimTime
+2026-01-29 15:51:42,956 - nl2sql_chatbot - INFO - ℹ️  ✅ System can generate JOINs with these tables
+2026-01-29 15:51:50,017 - numexpr.utils - INFO - NumExpr defaulting to 10 threads.
+2026-01-29 15:51:50,780 - nl2sql_chatbot - INFO - ℹ️  Starting NL → SQL Chatbot application
+2026-01-29 15:51:50,780 - nl2sql_chatbot - INFO - ℹ️  Initializing Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-29 15:51:50,780 - nl2sql_chatbot - INFO - ℹ️  Vertex AI initialized successfully
+2026-01-29 15:51:50,780 - nl2sql_chatbot - INFO - ℹ️  📋 Getting dimension table schemas...
+2026-01-29 15:51:50,792 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:50,797 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:51,363 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProducts obtained
+2026-01-29 15:51:51,375 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:51,940 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProvince obtained
+2026-01-29 15:51:51,964 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:52,558 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimTime obtained
+2026-01-29 15:51:52,559 - nl2sql_chatbot - INFO - ℹ️  Dimensions loaded in 1.78s (3 tables)
+2026-01-29 15:51:52,559 - nl2sql_chatbot - INFO - ℹ️  ✅ Dimension tables available: DimProducts, DimProvince, DimTime
+2026-01-29 15:51:52,559 - nl2sql_chatbot - INFO - ℹ️  ✅ System can generate JOINs with these tables
+2026-01-29 15:51:53,555 - numexpr.utils - INFO - NumExpr defaulting to 10 threads.
+2026-01-29 15:51:54,311 - nl2sql_chatbot - INFO - ℹ️  Starting NL → SQL Chatbot application
+2026-01-29 15:51:54,311 - nl2sql_chatbot - INFO - ℹ️  Initializing Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-29 15:51:54,311 - nl2sql_chatbot - INFO - ℹ️  Vertex AI initialized successfully
+2026-01-29 15:51:54,311 - nl2sql_chatbot - INFO - ℹ️  📋 Getting dimension table schemas...
+2026-01-29 15:51:54,324 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:54,328 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:54,923 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProducts obtained
+2026-01-29 15:51:54,947 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:55,699 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProvince obtained
+2026-01-29 15:51:55,722 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:51:56,382 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimTime obtained
+2026-01-29 15:51:56,383 - nl2sql_chatbot - INFO - ℹ️  Dimensions loaded in 2.07s (3 tables)
+2026-01-29 15:51:56,383 - nl2sql_chatbot - INFO - ℹ️  ✅ Dimension tables available: DimProducts, DimProvince, DimTime
+2026-01-29 15:51:56,383 - nl2sql_chatbot - INFO - ℹ️  ✅ System can generate JOINs with these tables
+2026-01-29 15:52:30,476 - numexpr.utils - INFO - NumExpr defaulting to 10 threads.
+2026-01-29 15:52:31,292 - nl2sql_chatbot - INFO - ℹ️  Starting NL → SQL Chatbot application
+2026-01-29 15:52:31,292 - nl2sql_chatbot - INFO - ℹ️  Initializing Vertex AI - Project: bunge-de-poc-insumos, Location: us-central1
+2026-01-29 15:52:31,292 - nl2sql_chatbot - INFO - ℹ️  Vertex AI initialized successfully
+2026-01-29 15:52:31,292 - nl2sql_chatbot - INFO - ℹ️  📋 Getting dimension table schemas...
+2026-01-29 15:52:31,308 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:52:31,313 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:52:32,022 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProducts obtained
+2026-01-29 15:52:32,043 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:52:32,713 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimProvince obtained
+2026-01-29 15:52:32,739 - google.auth._default - WARNING - No project ID could be determined. Consider running `gcloud config set project` or setting the GOOGLE_CLOUD_PROJECT environment variable
+2026-01-29 15:52:33,484 - nl2sql_chatbot - INFO - ℹ️  ✅ Schema for DimTime obtained
+2026-01-29 15:52:33,485 - nl2sql_chatbot - INFO - ℹ️  Dimensions loaded in 2.19s (3 tables)
+2026-01-29 15:52:33,485 - nl2sql_chatbot - INFO - ℹ️  ✅ Dimension tables available: DimProducts, DimProvince, DimTime
+2026-01-29 15:52:33,485 - nl2sql_chatbot - INFO - ℹ️  ✅ System can generate JOINs with these tables
